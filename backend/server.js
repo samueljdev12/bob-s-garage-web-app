@@ -9,6 +9,12 @@ app.use(express.json());
 // enable url encoded
 app.use(express.urlencoded({ extended: true}))
 
+// Bring in Bcrypt
+const bcrypt = require('bcrypt');
+
+// bring in jwt
+const jwt = require('jsonwebtoken');
+
 // bring in the Sequelzie model
 db = require("./models")
 
@@ -27,9 +33,54 @@ app.get("/server/feedback", (req, res) =>{
 })
 
 // add a new feedback route
-app.post("/server/feedback/add", (req, res)=>{
-    res.send("this is the add feedback route")
+app.post("/server/feedback/add/:userId", async (req, res)=>{
+    
+    try {
+
+        // get form data
+    const {content} = req.body;
+    // get user id
+    let UserUserId = req.params.userId;
+    UserUserId = parseInt(UserUserId)
+    const createdFeedback = await Feedback.create({
+        content,
+        UserUserId
+
+    })
+
+    res.status(200).json(createdFeedback)
+
+    // check if the user already left  feedback
+    // const hasFeedback = await Feedback.findOne({where: {UserUserId: userId}})
+    // if(hasFeedback){
+    //     res.send("user has no feedback")
+    // }
+        
+    } catch (error) {
+        
+        console.log(error)
+         // send error back
+       res.status(500).json("An error occured while creatinf feedback")
+        
+    }
+    
+
+
+   
 })
+
+// get alll feedbacks
+app.get("/server/feedback/all/:userId", async (req, res) =>{
+    try {
+        const feedbacks = await Feedback.findAll()
+        res.send(feedbacks)
+    } catch (error) {
+        res.send(error)
+    }
+})
+
+// edit feedback endpoint
+
 
 // get all blog post
 app.get("/server/blog/all", async(req, res) =>{
@@ -114,9 +165,132 @@ app.post("/server/blog/delete/:id", async (req, res) =>{
 
 })
 
+// feed back routes
+//get all feedbacks
+app.get("/server/feedback/all", (req, res) =>{
+    res.send("all feed backs")
+})
 
-app.post("server/login", (req, res) => {
-    res.send("Hello from the login page")
+
+// users routes
+// signup route
+app.post("/server/signup", async (req, res) =>{
+     
+   try {
+    
+    const {firstName, lastName, email, password} = req.body;
+    // check if user exists
+    const user = await User.findOne({where: {email: email}});
+    // send message back if user exists
+    if(user){
+        res.status(400).json({errors: [{msg: "User already exists"}]})
+    }
+
+    // create a new user object
+    const newUser = {
+        firstName,
+        lastName,
+        email,
+        password,
+        isAdmin: false
+    }
+
+    // has password
+    const salt = await bcrypt.genSalt(10);
+    newUser.password = await bcrypt.hash(password, salt);
+
+    // save user to databse
+    const userRes = await User.create({
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        email: newUser.email,
+        password: newUser.password,
+        isAdmin: newUser.isAdmin
+    })
+
+    // create a payload
+    const payload = {
+        userId: userRes.userId,
+        firstName: userRes.firstName,
+        lastName: userRes.lastName,
+        email: userRes.email,
+        isAdmin: userRes.isAdmin
+    }
+
+    // sogn the JWT token 
+    jwt.sign(payload, config.auth.jwtSecret, 
+    {
+        expiresIn: '5d',
+        algorithm: 'HS512'
+    }, 
+    (err, token) =>{
+        if(err) throw err
+        res.json(token)
+    }
+    )
+
+   } catch (error) {
+    res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+   }
+
+
+
+
+})
+
+//login route
+app.post("/server/login", async (req, res) => {
+    
+    try {
+        
+         
+    // geting information from post body
+    const {email, password} = req.body;
+    // find user in databse
+    let user = await User.findOne({where: {email: email}})
+
+    // check if user exists and send message when crenddentials are incorretc
+    if(!user){
+        return res.status(400).json({ errors: [{ msg: 'Invalid Credentials'}]});
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password)
+
+    // Send a message back if the password is incorrect.
+    if (!isMatch){
+        return res.status(400).json({ errors: [{ msg: 'Invalid Credentials'}]});
+      }
+
+       // create a payload
+    const payload = {
+        userId: user.userId,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        isAdmin: user.isAdmin
+    }
+
+    // sign payload with jwt
+    jwt.sign(payload, config.auth.jwtSecret, 
+        {
+          expiresIn: '5d',
+          algorithm: 'HS512'
+        },
+        (err, token) => {
+          if(err) throw err;
+          res.json({ token });
+        }
+        );
+
+    } catch (error) {
+    // Send back an error message.
+    console.error(error.message);
+    res.status(500).json({ errors: [{ msg: 'Server Error' }] });
+    }
+  
+
+
+    
 })
 
 
