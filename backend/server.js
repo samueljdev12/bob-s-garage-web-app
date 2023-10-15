@@ -29,7 +29,7 @@ const blogController = require("./controllers/blogContoller");
 // bring feedback controller
 const feedbackController = require("./controllers/feedbackController");
 
-
+// feedback routes
 // add a new feedback route
 app.post("/server/feedback/add/:userId", feedbackController.addFeedback);
 
@@ -46,6 +46,7 @@ app.get("/server/feedback/:feedId", feedbackController.getFeedback)
 app.post("/server/feedback/:feedId", feedbackController.deleteFeedback)
 
 
+// bog endpoints
 // get all blog post
 app.get("/server/blog/all", blogController.getAllBlog)
 
@@ -66,7 +67,7 @@ app.post("/server/signup", userController.signup)
 app.post("/server/login", userController.login)
 
 
-
+// server 
 db.sequelize.sync().then(() => {
     app.listen(config.port,
       () => console.log(`Server is running on port: ${config.port}`))
