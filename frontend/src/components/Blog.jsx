@@ -1,6 +1,16 @@
+import { useEffect } from "react";
+import {  useDispatch, useSelector } from "react-redux";
+import { getPost, selectPosts } from "../../reducers/BlogReducer";
 
 const Blog = () => {
+  const dispatch = useDispatch();
+  useEffect(() =>{
+    dispatch(getPost())
+  }, [dispatch])
   // Dummy blog post data with images
+
+  const posts = useSelector(selectPosts);
+  console.log(`the posts in blog.jsx are ${posts}`);
   const dummyBlogPosts = [
     {
       id: 1,
