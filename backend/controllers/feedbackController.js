@@ -50,7 +50,7 @@ const getAllFeedback = async (req, res) =>{
 const getFeedback = async(req, res) =>{
     try {
 
-        let feedId = 1;
+        let feedId = req.params.feedId;
         const feedback = await Feedback.findOne({where: {feedId: feedId}})
         console.log(typeof(feedId))
         console.log(feedId);
