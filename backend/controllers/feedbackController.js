@@ -1,8 +1,10 @@
+const { db } = require("../config/config");
+
 // bring in the Sequelzie model
 db = require("../models")
 
 // Destructure models
-const {Feedback} = db.sequelize.models
+const {Feedback, User} = db.sequelize.models
 
 const addFeedback = async (req, res)=>{
     
@@ -38,7 +40,9 @@ const addFeedback = async (req, res)=>{
 // get all feedbacks
 const getAllFeedback = async (req, res) =>{
     try {
-        const feedbacks = await Feedback.findAll()
+        const feedbacks = await Feedback.findAll({
+            include: User
+        })
         res.send(feedbacks)
     } catch (error) {
         res.send(error)
