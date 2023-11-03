@@ -1,7 +1,7 @@
-const { db } = require("../config/config");
+
 
 // bring in the Sequelzie model
-db = require("../models")
+const db = require("../models")
 
 // Destructure models
 const {Feedback, User} = db.sequelize.models
