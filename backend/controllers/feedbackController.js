@@ -9,10 +9,9 @@ const addFeedback = async (req, res)=>{
     try {
 
         // get form data
-    const {content} = req.body;
+    const {content, UserUserId} = req.body;
+    
     // get user id
-    let UserUserId = 1
-    console.log(UserUserId);
     const createdFeedback = await Feedback.create({
         content,
         UserUserId

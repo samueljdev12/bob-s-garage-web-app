@@ -35,7 +35,7 @@ const feedbackController = require("./controllers/feedbackController");
 // feedback routes
 //private route user must be authenticated
 // add a new feedback route
-app.post("/server/feedback/add", auth, feedbackController.addFeedback);
+app.post("/server/feedback/new", auth, feedbackController.addFeedback);
 
 // get alll feedbacks
 //public route no auth required
