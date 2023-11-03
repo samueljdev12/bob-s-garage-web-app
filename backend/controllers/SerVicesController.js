@@ -1,13 +1,14 @@
 // bring in the Sequelzie model
 const db = require("../models")
 
-const {Services} = db.sequelize.models;
+const {Service} = db.sequelize.models;
 
 
 const addService = async (req, res) =>{
     try {
         const {name, description, price} = req.body;
-        const createdService = await Services.create({
+        console.log(name, description, price)
+        const createdService = await Service.create({
             name,
             description,
             price
@@ -22,10 +23,15 @@ const addService = async (req, res) =>{
 
 const getServices = async(req, res) =>{
     try {
-        const services = await Services.findAll();
-        res.status(200).json(services)
+        const services = await Service.findAll();
+        
+        res.send(services)
     } catch (error) {
         res.status(500).json("An error occured while getting Service")
     }
 }
 
+module.exports = {
+    addService,
+    getServices
+}

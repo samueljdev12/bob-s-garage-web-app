@@ -32,6 +32,9 @@ const blogController = require("./controllers/blogContoller");
 // bring feedback controller
 const feedbackController = require("./controllers/feedbackController");
 
+//service ocntroller
+const servicesController = require("./controllers/SerVicesController")
+
 // feedback routes
 //private route user must be authenticated
 // add a new feedback route
@@ -83,6 +86,10 @@ app.post("/server/login", userController.login)
 // get user details
 app.get("/server/user", auth, userController.getUser)
 
+
+// services
+app.get("/server/services", servicesController.getServices);
+app.post("/server/services/new", servicesController.addService)
 
 // server 
 db.sequelize.sync().then(() => {
