@@ -14,6 +14,50 @@ const Register = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    // Validate the input while the user types
+    const newErrors = { ...errors };
+
+    if (name === 'firstName' || name === 'lastName') {
+      const namePattern = /^[A-Za-z]+$/;
+      if (!value.match(namePattern)) {
+        newErrors[name] = `${name.charAt(0).toUpperCase() + name.slice(1)} must contain letters only`;
+      } else {
+        delete newErrors[name];
+      }
+    }
+
+    if (name === 'email') {
+      if (!/^\S+@\S+\.\S+$/.test(value)) {
+        newErrors.email = 'Invalid email format';
+      } else {
+        delete newErrors.email;
+      }
+    }
+
+    if (name === 'password') {
+      if (value.length < 8) {
+        newErrors.password = 'Password must be at least 8 characters long';
+      } else if (!/(?=.*[A-Z])/.test(value)) {
+        newErrors.password = 'Password must include at least one uppercase letter';
+      } else if (!/[!@#$%^&*]/.test(value)) {
+        newErrors.password = 'Password must include at least one special character (!@#$%^&*)';
+      } else {
+        delete newErrors.password;
+      }
+    }
+
+    if (name === 'repeatPassword') {
+      if (value !== formData.password) {
+        newErrors.repeatPassword = 'Passwords do not match';
+      } else {
+        delete newErrors.repeatPassword;
+      }
+    }
+
+    setErrors(newErrors);
+
+    // Update the form data
     setFormData({
       ...formData,
       [name]: value,
@@ -22,46 +66,15 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
-    const newErrors = {};
-  
-    // Basic validation for first name and last name (letters only)
-    const namePattern = /^[A-Za-z]+$/;
-    if (!formData.firstName.match(namePattern)) {
-      newErrors.firstName = 'First name must contain letters only';
-    }
-    if (!formData.lastName.match(namePattern)) {
-      newErrors.lastName = 'Last name must contain letters only';
-    }
-  
-    if (formData.email === '') {
-      newErrors.email = 'Email is required';
-    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-      newErrors.email = 'Invalid email format';
-    }
-  
-    if (formData.password === '') {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters long';
-    } else if (!/(?=.*[A-Z])/.test(formData.password)) {
-      newErrors.password = 'Password must include at least one uppercase letter';
-    } else if (!/[!@#$%^&*]/.test(formData.password)) {
-      newErrors.password = 'Password must include at least one special character (!@#$%^&*)';
-    }
-  
-    if (formData.password !== formData.repeatPassword) {
-      newErrors.repeatPassword = 'Passwords do not match';
-    }
-  
-    if (Object.keys(newErrors).length === 0) {
+    
+    // Additional validation and form submission logic
+    // ...
+
+    if (Object.keys(errors).length === 0) {
       // Form is valid - you can handle registration or submission logic here
       console.log('Form data:', formData);
-    } else {
-      setErrors(newErrors);
     }
   };
-  
 
   return (
     <div className="container py-5">
@@ -71,7 +84,7 @@ const Register = () => {
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="firstName" className="form-label">
-                <FiUser></FiUser>First Name
+                <FiUser></FiUser> First Name
               </label>
               <input
                 type="text"
@@ -85,7 +98,7 @@ const Register = () => {
             </div>
             <div className="mb-3">
               <label htmlFor="lastName" className="form-label">
-                <FiUser></FiUser>Last Name
+                <FiUser></FiUser> Last Name
               </label>
               <input
                 type="text"
@@ -99,7 +112,7 @@ const Register = () => {
             </div>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
-                <FiMail></FiMail>Email
+                <FiMail></FiMail> Email
               </label>
               <input
                 type="email"
@@ -113,7 +126,7 @@ const Register = () => {
             </div>
             <div className="mb-3">
               <label htmlFor="password" className="form-label">
-                <FiLock></FiLock>Password
+                <FiLock></FiLock> Password
               </label>
               <input
                 type="password"
@@ -127,7 +140,7 @@ const Register = () => {
             </div>
             <div className="mb-3">
               <label htmlFor="repeatPassword" className="form-label">
-                <FiLock></FiLock>Repeat Password
+                <FiLock></FiLock> Repeat Password
               </label>
               <input
                 type="password"
@@ -139,7 +152,7 @@ const Register = () => {
               />
               {errors.repeatPassword && <div className="invalid-feedback">{errors.repeatPassword}</div>}
             </div>
-            <button type="submit" className="btn btn-primary mx-auto ">
+            <button type="submit" className="btn btn-primary mx-auto">
               Register<FiUserPlus></FiUserPlus>
             </button>
           </form>

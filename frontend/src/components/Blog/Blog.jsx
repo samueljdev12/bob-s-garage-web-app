@@ -15,12 +15,19 @@ const Blog = () => {
 
   const posts = useSelector(selectPosts);
   const error = useSelector(selectError);
-  console.log(error)
+  console.log(error);
 
-  if(posts.length <= 0 ){
-    return (<div class="alert alert-info" role="alert">
-    No feed backs to show
- </div>)
+  if (posts.length <= 0) {
+    return (
+      <div className="container-error px-2">
+      <h2 className="mb-4 mt-5">Blog</h2>
+      <div className="row">
+      <div className="alert alert-info" role="alert">
+        No feed backs to show
+      </div>
+      </div>
+      </div>
+    );
   }
 
   return (

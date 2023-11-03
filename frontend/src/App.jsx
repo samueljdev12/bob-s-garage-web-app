@@ -3,8 +3,8 @@ import Nav from './components/layouts/Nav';
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 import AboutUs from './components/pages/AboutUs';
 import Home from './components/pages/Home';
-import Services from './components/pages/Services';
-// import Register from './components/Register.Jsx';
+import Services from './components/Services/Services';
+import Register from './components/User/Register';
 import Login from './components/User/Login';
 import Footer from './components/layouts/Footer';
 import Faq from './components/pages/Faq';
@@ -26,7 +26,7 @@ function App() {
          <Route path='/about_us' element={<AboutUs/>}></Route>
          <Route path='/' element={<Home/>}></Route>
          <Route path='/services' element={<Services/>}></Route>
-         {/* <Route path='/register' element={<Register/>}></Route> */}
+         {<Route path='/register' element={<Register/>}></Route> }
          <Route path='/login' element={<Login/>}></Route>
          <Route path='/faq' element={<Faq/>}></Route>
          <Route path='/privacy-policy' element={<Privacy/>}></Route>
@@ -35,6 +35,7 @@ function App() {
          <Route path='/our-work' element={<OurWork/>}></Route>
          <Route path='/customer-account' element={<Account/>}></Route>
          <Route path='/blog/post/:postId' element={<SinglePost/>}></Route>
+         
       </Routes>
       </div>
       <Footer/>

@@ -42,9 +42,9 @@ const Nav = () => {
             <li className="nav-item">
               <Link className="nav-link" to="/privacy-policy">Privacy Policy</Link>
             </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/customer-account">Customer Account</a>
-            </li>
+            {isAuthentciated && (<li className="nav-item">
+              <a className="nav-link" href="/customer-account">My Account</a>
+            </li>)}
             <li className="nav-item">
               {isAuthentciated?  <button
                   className="btn btn-danger btn-sm p-2 text-light "

@@ -1,9 +1,8 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
-import {useDispatch} from'react-redux';
-import { loginAsync } from '../../../reducers/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginAsync, isAuth } from '../../../reducers/authSlice';
 import { useNavigate } from 'react-router-dom';
-
 
 const Login = () => {
   const navigate = useNavigate();
@@ -13,7 +12,8 @@ const Login = () => {
   });
 
   const [errors, setErrors] = useState({});
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector(isAuth);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -21,32 +21,35 @@ const Login = () => {
       ...formData,
       [name]: value,
     });
+
+    // Real-time email validation checks
+    const newErrors = {};
+    if (name === 'email' && !validateEmail(value)) {
+      newErrors.email = 'Invalid email format';
+    }
+
+    setErrors(newErrors);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const newErrors = {};
-    if (formData.email === '') {
-      newErrors.email = 'Email is required';
-    }
-    if (formData.password === '') {
-      newErrors.password = 'Password is required';
-    }
-
-    if (Object.keys(newErrors).length === 0) {
+    if (Object.keys(errors).length === 0) {
       // Form is valid - you can handle login or submission logic here
       console.log('Form data:', formData);
-      dispatch(loginAsync(formData)).then((result) =>{
-        if(loginAsync.fulfilled.match(result)){
-          navigate("/")
-        }
-      })
-
-    } else {
-      setErrors(newErrors);
+      dispatch(loginAsync(formData))
     }
   };
+
+  // Email validation function
+  const validateEmail = (email) => {
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+    return emailRegex.test(email);
+  };
+
+  if(isAuthenticated){
+    navigate("/")
+  }
 
   return (
     <div className="container py-5">
@@ -56,7 +59,8 @@ const Login = () => {
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
-                <FiMail></FiMail> Email
+                <FiMail />
+                Email
               </label>
               <input
                 type="email"
@@ -65,25 +69,27 @@ const Login = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
+                required
               />
               {errors.email && <div className="invalid-feedback">{errors.email}</div>}
             </div>
             <div className="mb-3">
               <label htmlFor="password" className="form-label">
-                <FiLock></FiLock>Password
+                <FiLock />
+                Password
               </label>
               <input
                 type="password"
-                className={`form-control ${errors.password ? 'is-invalid' : ''}`}
+                className={`form-control`}
                 id="password"
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
+                required
               />
-              {errors.password && <div className="invalid-feedback">{errors.password}</div>}
             </div>
             <button type="submit" className="btn btn-primary">
-              Login<FiLogIn></FiLogIn>
+              Login <FiLogIn />
             </button>
             <p className="mt-3">
               Don't have an account? <a href="/register">Register</a>

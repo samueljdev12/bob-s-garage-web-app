@@ -13,16 +13,19 @@ const Feedback = () => {
   }, [dispatch]);
 
   const feedbacks = useSelector(selectAllFeedbacks);
-  console.log(feedbacks);
-  feedbacks.forEach((element) => {
-    console.log(element.feedId);
-  });
 
   const date = new Date();
   if (feedbacks.length <= 0) {
-    <div class="alert alert-info" role="alert">
-       No feed backs to show
-    </div>;
+    return (
+      <div className="container-error px-3">
+      <h2 className="mt-4">Testimonials</h2>
+      <div className="row">
+      <div className="alert alert-info" role="alert">
+        No feed backs to show
+      </div>
+      </div>
+      </div>
+    );
   }
 
   return (

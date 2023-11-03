@@ -11,7 +11,7 @@ const Account = () => {
     <div className="container my-5 border p-5 ">
       <div className="row">
         <div className="col-md-6 offset-md-3">
-          <h2 className="text-center mb-4">User Account</h2>
+          <h2 className="text-center mb-4">Your Account Details</h2>
           <div className="user-info">
             <div className="info-item">
               <span className="info-label">First Name:</span>
