@@ -62,6 +62,11 @@ const Service = sequelize.define("Service", {
         allowNull: false,
         unique: true
     },
+
+    description: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
     price: {
         type: DataTypes.FLOAT,
         allowNull: false

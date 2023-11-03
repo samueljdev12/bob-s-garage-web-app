@@ -43,6 +43,7 @@ const getAllFeedback = async (req, res) =>{
         const feedbacks = await Feedback.findAll({
             include: User,
         })
+
         res.send(feedbacks)
     } catch (error) {
         res.send(error)

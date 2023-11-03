@@ -7,13 +7,32 @@
 .container-error{
   height: 65vh;
 }
-@media (min-width: 768px) {
+.absoulte-div{
+  position: fixed;
+   bottom: 30%;
+  right: 10px;
+  background-color: #ffff;
+  width: 18%;
+  
+}
+@media (max-width: 768px) {
   /* Your CSS styles go here */
   .wrapper{
     padding: 0;
   }
+
+  .absoulte-div{
+    
+    bottom: 0;
+    right: 0;
+    background-color: #ffff;
+    width: 100%;
+    z-index: 5;
+  }
+  
   /* Add more styles as needed */
 }
+
 
 ul {
   list-style: none; /* Remove default list styles */
