@@ -41,7 +41,8 @@ const addFeedback = async (req, res)=>{
 const getAllFeedback = async (req, res) =>{
     try {
         const feedbacks = await Feedback.findAll({
-            include: User
+            include: User,
+            attributes: ['firtsName', 'lastName']
         })
         res.send(feedbacks)
     } catch (error) {
