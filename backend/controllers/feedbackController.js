@@ -40,10 +40,9 @@ const addFeedback = async (req, res)=>{
 // get all feedbacks
 const getAllFeedback = async (req, res) =>{
     try {
-        const options = {attributes: {exclude: ['password']}}
         const feedbacks = await Feedback.findAll({
             include: User,
-        }, options)
+        })
         res.send(feedbacks)
     } catch (error) {
         res.send(error)
