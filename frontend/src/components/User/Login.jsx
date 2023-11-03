@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
 import {useDispatch} from'react-redux';
-import { loginAsync } from '../../reducers/authSlice';
+import { loginAsync } from '../../../reducers/authSlice';
 import { useNavigate } from 'react-router-dom';
 
 

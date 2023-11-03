@@ -4,6 +4,9 @@
   padding: 1rem;
 }
 
+.container-error{
+  height: 65vh;
+}
 @media (min-width: 768px) {
   /* Your CSS styles go here */
   .wrapper{

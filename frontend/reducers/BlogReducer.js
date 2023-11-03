@@ -6,7 +6,7 @@ const baseUrl = "http://localhost:3001/server/blog/all";
 const initialState = {
     posts: [],
     status: 'idle',
-    error: {}
+    error: false
 }
 
 // get all blog post
@@ -33,14 +33,19 @@ const blogSlice = createSlice({
         .addCase(getPost.fulfilled, (state, action) =>{
             state.status = "idle"
             state.posts = action.payload
+            
+            
         })
         .addCase(getPost.rejected, (state, action) =>{
             state.status = "idle"
             state.posts = []
+            state.error = true
         })
     }
 })
 
 export const selectPosts = (state) => state.blog.posts;
+export const selectError = (state) => state.blog.error;
+export const selectPost = (state, postId) => state.blog.posts.find(post => post.postId === postId);
 
 export default blogSlice.reducer;
