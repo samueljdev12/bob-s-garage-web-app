@@ -17,6 +17,12 @@ const Blog = () => {
   const error = useSelector(selectError);
   console.log(error)
 
+  if(posts.length <= 0 ){
+    return (<div class="alert alert-info" role="alert">
+    No feed backs to show
+ </div>)
+  }
+
   return (
     <div className="container py-5">
       <h2 className="mb-4 mt-5">Blog</h2>
