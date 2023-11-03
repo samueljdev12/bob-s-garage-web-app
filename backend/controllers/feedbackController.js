@@ -42,7 +42,7 @@ const getAllFeedback = async (req, res) =>{
     try {
         const feedbacks = await Feedback.findAll({
             include: User,
-            attributes: ['firtsName', 'lastName']
+            attributes: {exclude: ['password']}
         })
         res.send(feedbacks)
     } catch (error) {
