@@ -22,13 +22,14 @@ const getAllBlog = async(req, res) =>{
 const addNew = async (req, res) =>{
     
     // destructure request body
-    const {title, content} = req.body;
+    const {title, content, image} = req.body;
     // handle exceptions 
     try {
      // save post to database
        const post = await Blog.create({
         title,
-        content
+        content,
+        image
     })
     // resend post back
      res.status(200).json(post)
@@ -45,13 +46,14 @@ const editPost = async(req, res) =>{
     // get id from params
    const id = req.params.id;
    // destructure req body
-   const {title, content} = req.body;
+   const {title, content, image} = req.body;
    // handle exceptions
    try {
        // update post in database
        const updatedPost = await Blog.update({
            title,
-           content
+           content,
+           image
        }, {where: {postId: id}}
        )
         // send back message

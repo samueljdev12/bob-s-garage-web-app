@@ -31,7 +31,36 @@ const getServices = async(req, res) =>{
     }
 }
 
+// delete service
+const deleteService = async (req, res) =>{
+    let id = req.params.id;
+    id = parseInt(id);
+  
+    try {
+         const service = await Service.destroy({where: {serviceId: id}})
+         res.send("Sevice deleted succesfully")
+    } catch (error) {
+        res.status(500).json(error)
+    }
+}
+
+// update service
+const updateService = async (req, res) =>{
+    let id = req.params.id;
+    id = parseInt(id);
+
+    const {name, description, price} = req.body;
+    try {
+        const service = await Service.update({name, description, price}, {where: {serviceId: id}})
+        res.send("service updated successfully")
+    } catch (error) {
+        res.status(500).json(error)
+    }
+}
+
 module.exports = {
     addService,
-    getServices
+    getServices,
+    updateService,
+    deleteService
 }

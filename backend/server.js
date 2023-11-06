@@ -46,11 +46,14 @@ app.get("/server/feedbacks", feedbackController.getAllFeedback)
 
 // edit feedback endpoint
 //private route user must be authenticated
-app.put("/server/feedback/edit/:feedId", feedbackController.deleteFeedback)
+app.put("/server/feedback/delete/:id", feedbackController.deleteFeedback)
 
 // get one feedback
 //public route no auth required
-app.get("/server/feedback/:feedId", feedbackController.getFeedback)
+app.get("/server/feedback/:id", feedbackController.getFeedback)
+
+// update feed
+app.put("/server/feedback/edit/:id", feedbackController.editFeedback);
 
 // delete feedback
 //privat toute auth required and only admin users can delete
