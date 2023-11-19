@@ -12,35 +12,6 @@ const Services = () => {
   }, [dispatch]);
 
   const services = useSelector(getAllServices)
-  console.log(services)
-
-  const Myservices = [
-    {
-      title: 'Engine Diagnostics and Repair',
-      description: 'Our experienced mechanics offer expert engine diagnostics and repair services to keep your vehicle running smoothly.',
-      price: '$99.99',
-    },
-    {
-      title: 'Brake System Maintenance',
-      description: 'Trust us for your brake system maintenance needs, ensuring the safety of your vehicle.',
-      price: '$79.99',
-    },
-    {
-      title: 'Transmission Services',
-      description: 'We provide quality transmission repair and maintenance to keep your vehicle in optimal condition.',
-      price: '$129.99',
-    },
-    {
-      title: 'Oil Changes and Routine Maintenance',
-      description: 'Regular oil changes and routine maintenance are essential for the longevity of your vehicle.',
-      price: '$49.99',
-    },
-    {
-      title: 'Electrical System Repair',
-      description: 'Our skilled technicians handle electrical system repairs to keep your vehicle\'s electronics functioning correctly.',
-      price: '$89.99',
-    },
-  ];
 
   if(services.length <= 0 ){
     return (

@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
-import { isAuth, logout } from '../../../reducers/authSlice';
+import { loginAsync, isAuth, logout } from '../../../../reducers/authSlice';
 import { useSelector, useDispatch } from 'react-redux';
 
-const Nav = () => {
+const Header = () => {
   const isAuthentciated = useSelector(isAuth)
   const dispatch = useDispatch();
   const handleLogout = () =>{
@@ -18,29 +18,17 @@ const Nav = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
-              <Link className="nav-link" to="/">Home</Link>
+              <Link className="nav-link" to="/about_us">Services</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/about_us">About Us</Link>
+              <Link className="nav-link" to="/services">Blog</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/services">Services</Link>
+              <Link className="nav-link" to="/testimonials">Feedbacks</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/testimonials">Testimonials</Link>
+              <Link className="nav-link" to="/faq">Users</Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/faq">FAQ</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/blog">Blog</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/privacy-policy">Privacy Policy</Link>
-            </li>
-            {isAuthentciated && (<li className="nav-item">
-              <Link className="nav-link" to="/customer-account">My Account</Link>
-            </li>)}
             <li className="nav-item">
               {isAuthentciated?  <button
                   className="btn btn-danger btn-sm p-2 text-light "
@@ -48,11 +36,8 @@ const Nav = () => {
                   data-bs-target="#exampleModal"
                 >
                   Logout
-                </button> : <Link className="nav-link" to="/login">Login</Link>}
+                </button> : ""}
             </li>
-            {!isAuthentciated && (<li className="nav-item">
-              <Link className="nav-link" to="/register">Register</Link>
-            </li>)}
           </ul>
         </div>
       </div>
@@ -86,4 +71,4 @@ const Nav = () => {
   );
 };
 
-export default Nav;
+export default Header;

@@ -1,11 +1,27 @@
-
+import { useDispatch, useSelector } from "react-redux";
+import { getUser, getAuthUser, isAuth } from "../../../reducers/authSlice";
+import { useEffect } from "react";
 const Account = () => {
-  // Mock user data
-  const userData = {
-    firstName: 'Test',
-    lastName: 'Test',
-    email: 'test@gmail.com',
-  };
+  const dispatch = useDispatch();
+  useEffect(() =>{
+     dispatch(getUser())
+  }, [dispatch])
+  
+ const isAuthenticated = useSelector(isAuth);
+  const userData = useSelector(getAuthUser);
+
+  if(!isAuthenticated){
+    return(
+      <div className="container-error px-3">
+      <div className="row">
+      <div className="alert alert-warning" role="alert">
+        You are not Authorized to access this page, Please login
+      </div>
+      </div>
+      </div>
+    )
+  }
+
 
   return (
     <div className="container my-5 border p-5 ">

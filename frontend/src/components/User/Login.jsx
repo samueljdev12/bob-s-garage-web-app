@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginAsync, isAuth } from '../../../reducers/authSlice';
+import { loginAsync, isAuth, getStatus, getUser } from '../../../reducers/authSlice';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -14,6 +14,8 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(isAuth);
+  const status = useSelector(getStatus);
+  console.log(status)
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -47,9 +49,20 @@ const Login = () => {
     return emailRegex.test(email);
   };
 
-  if(isAuthenticated){
+   if(status === "success"){
+    dispatch(getUser());
     navigate("/")
-  }
+   }
+
+   if(status === "failed"){
+    return (<div className="container-error px-3">
+    <div className="row">
+    <div className="alert alert-danger" role="alert">
+       An error occured try again! use correct login details
+    </div>
+    </div>
+    </div>)
+   }
 
   return (
     <div className="container py-5">

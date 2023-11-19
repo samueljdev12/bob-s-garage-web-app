@@ -1,7 +1,13 @@
-import React, { useState } from 'react';
 import { FiUser, FiMail, FiLock, FiUserPlus } from 'react-icons/fi';
+import { useDispatch, useSelector } from "react-redux";
+import { register, getStatus } from '../../../reducers/authSlice';
+import { useState } from 'react';
+import {Link} from "react-router-dom"
 
 const Register = () => {
+  const dispacth = useDispatch();
+  const status = useSelector(getStatus);
+  console.log(status)
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -73,8 +79,31 @@ const Register = () => {
     if (Object.keys(errors).length === 0) {
       // Form is valid - you can handle registration or submission logic here
       console.log('Form data:', formData);
+      dispacth(register(formData))
+      
     }
   };
+
+  if(status === "success"){
+    return (<div className="container-error px-3">
+    <div className="row">
+    <div className="alert alert-success" role="alert">
+        Your account have been created succesfully
+        <Link to="/login">Login here</Link>
+    </div>
+    </div>
+    </div>)
+  }
+
+  if(status === "failed"){
+    return (<div className="container-error px-3">
+    <div className="row">
+    <div className="alert alert-danger" role="alert">
+       An error occured try again!
+    </div>
+    </div>
+    </div>)
+  }
 
   return (
     <div className="container py-5">
