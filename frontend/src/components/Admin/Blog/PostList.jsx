@@ -1,26 +1,59 @@
-import React, { useState } from 'react';
 import { FiTrash, FiEdit } from 'react-icons/fi';
+import {useDispatch, useSelector} from "react-redux";
+import { selectPosts, getPost } from '../../../../reducers/BlogReducer';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { deletePost } from '../../../../reducers/BlogReducer';
+import { isAuth } from '../../../../reducers/authSlice';
 
 const PostList = () => {
-  // Dummy data for illustration
-  const dummyPosts = [
-    { id: 1, title: 'Post 1', content: 'Lorem ipsum dolor sit amet.' },
-    { id: 2, title: 'Post 2', content: 'Consectetur adipiscing elit.' },
-    { id: 3, title: 'Post 3', content: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.' },
-  ];
+  
+  const disptach = useDispatch();
+  const posts = useSelector(selectPosts) || []
+  const isAuthenticated = useSelector(isAuth);
+  const isAdmin = localStorage.getItem("isAdmin")
 
   const handleDelete = (id) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this post?');
     // Add logic to handle post deletion
+    if(confirmDelete){
+      disptach(deletePost(id))
+    }
     console.log(`Delete post with ID: ${id}`);
   };
+  
+  if(!isAuthenticated || isAdmin != "true"){
+    return(
+      <div className="container-error px-3">
+      <div className="row">
+      <div className="alert alert-warning" role="alert">
+        You are not Authorized to access this page
+      </div>
+      </div>
+      </div>
+    )
+  }
 
-  const handleEdit = (id) => {
-    // Add logic to handle post editing
-    console.log(`Edit post with ID: ${id}`);
-  };
+  if(!Array.isArray(posts) || posts.length <= 0 ){
+    return (
+      <div className="container-error px-3">
+        <div className='text-center'>
+            <Link to="/admin/add_post" className='btn btn-outline-primary m-3'>Add Post</Link>
+        </div>
+      <div className="row">
+      <div className="alert alert-info" role="alert">
+        An error occured while fetching post, refresh page and try again
+      </div>
+      </div>
+      </div>
+    )
+  }
 
   return (
     <div className="container py-5">
+      <div className='text-center'>
+            <Link to="/admin/add_post" className='btn btn-outline-primary m-3'>Add Post</Link>
+        </div>
       <div className="row justify-content-center">
         <div className="col-md-8">
           <h2 className="mb-4">Post List</h2>
@@ -33,26 +66,26 @@ const PostList = () => {
               </tr>
             </thead>
             <tbody>
-              {dummyPosts.map((post) => (
-                <tr key={post.id}>
+              {Array.isArray(posts) && (posts.map((post) => (
+                <tr key={post.postId}>
                   <td>{post.title}</td>
                   <td>{post.content}</td>
                   <td>
                     <button
                       className="btn btn-danger btn-sm me-2"
-                      onClick={() => handleDelete(post.id)}
+                      onClick={() => handleDelete(post.postId)}
                     >
                       <FiTrash /> Delete
                     </button>
-                    <button
+                    <Link
                       className="btn btn-warning btn-sm"
-                      onClick={() => handleEdit(post.id)}
+                      to={`/admin/post/edit/${post.postId}`}
                     >
                       <FiEdit /> Edit
-                    </button>
+                    </Link>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

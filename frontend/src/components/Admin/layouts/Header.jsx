@@ -18,16 +18,13 @@ const Header = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
-              <Link className="nav-link" to="/about_us">Services</Link>
+              <Link className="nav-link" to="/admin/services">Services</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/services">Blog</Link>
+              <Link className="nav-link" to="/admin/posts">Blog</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/testimonials">Feedbacks</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/faq">Users</Link>
+              <Link className="nav-link" to="/admin/feedbacks">Feedbacks</Link>
             </li>
             <li className="nav-item">
               {isAuthentciated?  <button

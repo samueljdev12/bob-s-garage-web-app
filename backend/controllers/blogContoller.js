@@ -57,7 +57,7 @@ const editPost = async(req, res) =>{
        }, {where: {postId: id}}
        )
         // send back message
-       res.status(200).json("post updated succesfully")
+       res.status(200).json(updatedPost)
    } catch (error) {
        // send back error message
        res.status(500).json("An error occured")
@@ -77,7 +77,7 @@ const deletePost = async (req, res) =>{
         const deletedPost = await Blog.destroy({where: {postId: id}})
         
          // send back message
-        res.status(200).json("post deleted succesfully")
+        res.status(200).json(deletedPost)
     } catch (error) {
         // send back error message
         res.status(500).json("An error occured")

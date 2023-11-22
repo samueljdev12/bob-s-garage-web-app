@@ -20,6 +20,7 @@ import FeedbackList from './components/Admin/Feedback/FeedbackList';
 import PostList from './components/Admin/Blog/PostList';
 import ServiceList from './components/Admin/Services/ServiceList';
 import Header from './components/Admin/layouts/Header';
+import EditPost from './components/Admin/Blog/EditPost';
 
 
 function App() {
@@ -49,6 +50,7 @@ const isAdmin = localStorage.getItem("isAdmin");
          <Route path='/admin/feedbacks' element={<FeedbackList/>}></Route>
           <Route path='/admin/posts' element={<PostList/>}></Route>
           <Route path='/admin/services' element={<ServiceList/>}></Route>
+          <Route path='/admin/post/edit/:id' element={<EditPost/>}></Route>
          
       </Routes>
       </div>

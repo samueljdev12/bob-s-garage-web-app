@@ -1,23 +1,29 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FiEdit, FiLink, FiFileText } from 'react-icons/fi';
 import {useSelector, useDispatch} from "react-redux";
-import { addPost, selectStatus, selectError } from '../../../../reducers/BlogReducer';
-import { useNavigate } from 'react-router-dom';
+import { editPost, selectStatus, selectPost } from '../../../../reducers/BlogReducer';
+import { useNavigate, useParams , Link} from 'react-router-dom';
 import { isAuth } from '../../../../reducers/authSlice';
 
-const AddPost = () => {
-  const [formData, setFormData] = useState({
-    title: '',
-    content: '',
-    image: '',
-  });
-  
-  const isAuthenticated = useSelector(isAuth);
-  const isAdmin = localStorage.getItem("isAdmin")
+const EditPost = () => {
+  // variables
+  const {id} = useParams();
+  const postId = parseInt(id);
   const dispatch = useDispatch();
   const navaigate = useNavigate();
   const status = useSelector(selectStatus);
   const [requestStaus, setRequestStatus] = useState(status);
+  const post = useSelector((state) => selectPost(state, postId))
+  const isAuthenticated = useSelector(isAuth);
+  const isAdmin = localStorage.getItem("isAdmin")
+
+
+  const [formData, setFormData] = useState({
+    postId: postId,
+    title: post?.title || '',
+    content: post?.content || '',
+    image: post?.image || '',
+  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -26,6 +32,22 @@ const AddPost = () => {
       [name]: value,
     });
   };
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setRequestStatus("loading")
+    // Add logic to handle post submission
+    try {
+      dispatch(editPost(formData))
+      navaigate("/admin/posts")
+    } catch (error) {
+      setRequestStatus("error")
+    }finally{
+      setRequestStatus("idle")
+    }
+    console.log('Form data:', formData);
+  }
 
   if(!isAuthenticated || isAdmin != "true"){
     return(
@@ -38,20 +60,21 @@ const AddPost = () => {
       </div>
     )
   }
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setRequestStatus("loading")
-    // Add logic to handle post submission
-    try {
-      dispatch(addPost(formData))
-      navaigate("/admin/posts")
-    } catch (error) {
-      setRequestStatus("error")
-    }finally{
-      setRequestStatus("idle")
-    }
-    console.log('Form data:', formData);
+  
+  const {title} = formData;
+  if(title === ''){
+    return(
+        <div className="container-error px-3">
+        <div className='text-center'>
+            <Link to="/admin/add_post" className='p-5'>&#60; &#x3C; &lt;tBack</Link>
+        </div>
+      <div className="row">
+      <div className="alert alert-info" role="alert">
+        Post not found try again
+      </div>
+      </div>
+      </div>
+    )
   }
 
   return (
@@ -100,7 +123,7 @@ const AddPost = () => {
               />
             </div>
             <button type="submit" className="btn btn-primary">
-              Add Post
+              update Post
             </button>
           </form>
         </div>
@@ -109,4 +132,4 @@ const AddPost = () => {
   );
 };
 
-export default AddPost;
+export default EditPost;
