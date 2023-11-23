@@ -85,7 +85,7 @@ const login = async (req, res) => {
 
     // check if user exists and send message when crenddentials are incorretc
     if (!user) {
-      return res.status(400).json({ errors: [{ msg: "Invalid Credentials" }] });
+      return res.status(400).json({ errors: [{ msg: "Invalid Credentials in user" }] });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);

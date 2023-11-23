@@ -1,4 +1,5 @@
 // bring in the Sequelzie model
+const { where } = require("sequelize");
 const db = require("../models");
 
 // Destructure models
@@ -8,7 +9,7 @@ const addFeedback = async (req, res) => {
   try {
     // get form data
     const { content, UserUserId } = req.body;
-
+    // const feedback = await Feedback.findOne({ where: { feedId: feedId } });
     // get user id
     const createdFeedback = await Feedback.create({
       content,
@@ -70,11 +71,11 @@ const deleteFeedback = async (req, res) => {
     console.log(id)
     try {
         const feedback = await Feedback.destroy({where: {feedId: id}})
-        res.send("deleted success")
+        res.send(feedback)
     } catch (error) {
         res.status(500).json(error)
     }
-  res.send("delete feedback");
+  
 };
 
 module.exports = {

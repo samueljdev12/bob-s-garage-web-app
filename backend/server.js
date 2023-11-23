@@ -38,7 +38,7 @@ const servicesController = require("./controllers/SerVicesController")
 // feedback routes
 //private route user must be authenticated
 // add a new feedback route
-app.post("/server/feedback/new", auth, feedbackController.addFeedback);
+app.post("/server/feedbacks/new", auth, feedbackController.addFeedback);
 
 // get alll feedbacks
 //public route no auth required
@@ -46,14 +46,14 @@ app.get("/server/feedbacks", feedbackController.getAllFeedback)
 
 // edit feedback endpoint
 //private route user must be authenticated
-app.put("/server/feedback/delete/:id", feedbackController.deleteFeedback)
+app.put("/server/feedbacks/delete/:id", feedbackController.deleteFeedback)
 
 // get one feedback
 //public route no auth required
 app.get("/server/feedback/:id", feedbackController.getFeedback)
 
 // update feed
-app.put("/server/feedback/edit/:id", feedbackController.editFeedback);
+app.put("/server/feedbacks/edit/:id", feedbackController.editFeedback);
 
 // delete feedback
 //privat toute auth required and only admin users can delete

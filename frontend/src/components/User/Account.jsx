@@ -1,6 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { getUser, getAuthUser, isAuth } from "../../../reducers/authSlice";
+import { selectUserFeedback } from "../../../reducers/FeedbackSlice";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 const Account = () => {
   const dispatch = useDispatch();
   useEffect(() =>{
@@ -9,6 +11,8 @@ const Account = () => {
   
  const isAuthenticated = useSelector(isAuth);
   const userData = useSelector(getAuthUser);
+  const userFeed = useSelector((state) => selectUserFeedback(state, userData.userId))
+  console.log(userFeed)
 
   if(!isAuthenticated){
     return(
@@ -42,6 +46,17 @@ const Account = () => {
               <span className="info-value">{userData.email}</span>
             </div>
           </div>
+           {userFeed !== undefined  &&(<div className="text-center m-3">
+              <h4>Your feedback</h4>
+              <p>{userFeed.content}</p>
+              <Link to={`/testimonials/edit/${userFeed.feedId}`} className="btn btn-outline-secondary ">Edit Feedback</Link>
+          </div>)}
+          {userFeed === undefined &&(
+            <div className="text-center m-3">
+            <h4>You have no Feedback</h4>
+             <Link className="btn btn-outline-primary " to="/testimonials/new">Leave Feedback</Link>
+        </div>
+          )}
         </div>
       </div>
     </div>

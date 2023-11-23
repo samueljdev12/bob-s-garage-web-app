@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import { FiMessageSquare } from 'react-icons/fi';
 import { isAuth, getAuthUser } from "../../../reducers/authSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { addFeedabck } from '../../../reducers/FeedbackSlice';
-import { useNavigate } from 'react-router-dom';
-const AddFeedback = () => {
+import { selectUserFeedback, editFeedback } from '../../../reducers/FeedbackSlice';
+import { useNavigate, useParams } from 'react-router-dom';
+const EditFeedback = () => {
   const isAuthenticated = useSelector(isAuth);
   const user = useSelector(getAuthUser)
+  const userFeed = useSelector((state) => selectUserFeedback(state, user.userId))
   const dispatch = useDispatch();
   const navaigate = useNavigate();
   const [formData, setFormData] = useState({
-    content: '',
-    UserUserId: user.userId
+    content: userFeed?.content || "",
+    UserUserId: user?.userId || 0
   });
 
   const [requestStatus, setRequestStatus] = useState("idle");
@@ -30,7 +31,7 @@ const AddFeedback = () => {
     setRequestStatus("loading")
     // Add logic to handle post submission
     try {
-      dispatch(addFeedabck(formData))
+      dispatch(editFeedback(formData, 3))
     } catch (error) {
       setRequestStatus("error")
     }finally{
@@ -72,7 +73,7 @@ const AddFeedback = () => {
               ></textarea>
             </div>
             <button type="submit" className="btn btn-primary">
-              Add Feedback
+               Update Feedback
             </button>
           </form>
         </div>
@@ -81,4 +82,4 @@ const AddFeedback = () => {
   );
 };
 
-export default AddFeedback;
+export default EditFeedback;

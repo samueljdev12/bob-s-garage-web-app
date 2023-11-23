@@ -1,18 +1,45 @@
 import React, { useState } from 'react';
 import { FiTrash } from 'react-icons/fi';
-
+import {useSelector, useDispatch} from "react-redux";
+import { selectAllFeedbacks } from '../../../../reducers/FeedbackSlice';
+import { Link } from 'react-router-dom';
+import { isAuth } from '../../../../reducers/authSlice';
 const FeedbackList = () => {
+  const feedbacks = useSelector(selectAllFeedbacks);
+  const isAuthenticated = useSelector(isAuth);
+  const isAdmin = localStorage.getItem("isAdmin")
   // Dummy data for illustration
-  const dummyFeedbacks = [
-    { id: 1, user: 'John Doe', content: 'Great service!' },
-    { id: 2, user: 'Jane Smith', content: 'Very satisfied with the work.' },
-    { id: 3, user: 'Bob Johnson', content: 'Excellent experience.' },
-  ];
+ 
 
   const handleDelete = (id) => {
     // Add logic to handle feedback deletion
     console.log(`Delete feedback with ID: ${id}`);
   };
+
+//  incase of unathorized user
+  if(!isAuthenticated || isAdmin != "true"){
+    return(
+      <div className="container-error px-3">
+      <div className="row">
+      <div className="alert alert-warning" role="alert">
+        You are not Authorized to access this page
+      </div>
+      </div>
+      </div>
+    )
+  }
+
+  if(!Array.isArray(feedbacks) || feedbacks.length <= 0 ){
+    return (
+      <div className="container-error px-3 m-4">
+      <div className="row">
+      <div className="alert alert-info" role="alert">
+        An error occured while fetching post, refresh page and try again
+      </div>
+      </div>
+      </div>
+    )
+  }
 
   return (
     <div className="container py-5">
@@ -28,14 +55,14 @@ const FeedbackList = () => {
               </tr>
             </thead>
             <tbody>
-              {dummyFeedbacks.map((feedback) => (
-                <tr key={feedback.id}>
-                  <td>{feedback.user}</td>
+              {feedbacks.map((feedback) => (
+                <tr key={feedback.feedId}>
+                  <td>{`${feedback.User.firstName} ${feedback.User.lastName}`}</td>
                   <td>{feedback.content}</td>
                   <td>
                     <button
                       className="btn btn-danger btn-sm"
-                      onClick={() => handleDelete(feedback.id)}
+                      onClick={() => handleDelete(feedback.feedId)}
                     >
                       <FiTrash /> Delete
                     </button>

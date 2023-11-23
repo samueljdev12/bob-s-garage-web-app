@@ -21,6 +21,8 @@ import PostList from './components/Admin/Blog/PostList';
 import ServiceList from './components/Admin/Services/ServiceList';
 import Header from './components/Admin/layouts/Header';
 import EditPost from './components/Admin/Blog/EditPost';
+import EditFeedback from './components/Feedback/EditFeedback';
+
 
 
 function App() {
@@ -44,6 +46,7 @@ const isAdmin = localStorage.getItem("isAdmin");
          <Route path='/customer-account' element={<Account/>}></Route>
          <Route path='/blog/post/:postId' element={<SinglePost/>}></Route>
          <Route path='/testimonials/new' element={<AddFeedback/>}></Route>
+         <Route path='/testimonials/edit/:id' element={<EditFeedback/>}></Route>
          {/* admin routes */}
          <Route path='/admin/add_post' element={<AddPost/>}></Route>
          <Route path='/admin/add_service' element={<AddService/>}></Route>

@@ -15,17 +15,17 @@ const Feedback = () => {
   const feedbacks = useSelector(selectAllFeedbacks);
 
   const date = new Date();
-  if (feedbacks.length <= 0) {
+  if(!Array.isArray(feedbacks) || feedbacks.length <= 0 ){
     return (
       <div className="container-error px-3">
-      <h2 className="mt-4">Testimonials</h2>
+  
       <div className="row">
       <div className="alert alert-info" role="alert">
-        No feed backs to show
+        An error occured while fetching feedbacks, refresh page and try again
       </div>
       </div>
       </div>
-    );
+    )
   }
 
   return (
