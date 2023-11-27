@@ -1,12 +1,14 @@
-import { Link } from "react-router-dom";
-import { loginAsync, isAuth, logout } from '../../../../reducers/authSlice';
+import { Link, useNavigate } from "react-router-dom";
+import { isAuth, logout } from '../../../../reducers/authSlice';
 import { useSelector, useDispatch } from 'react-redux';
 
 const Header = () => {
+  const navigate = useNavigate();
   const isAuthentciated = useSelector(isAuth)
   const dispatch = useDispatch();
   const handleLogout = () =>{
      dispatch(logout())
+     navigate("/")
   }
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light p-4">

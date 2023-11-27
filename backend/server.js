@@ -33,66 +33,40 @@ const blogController = require("./controllers/blogContoller");
 const feedbackController = require("./controllers/feedbackController");
 
 //service ocntroller
-const servicesController = require("./controllers/SerVicesController")
+const servicesController = require("./controllers/SerVicesController");
+
+//auth module
+const authenticate = require('./middleware/authenticate');
+// authorize module
+const authorize = require('./middleware/authorize');
 
 // feedback routes
-//private route user must be authenticated
-// add a new feedback route
 app.post("/server/feedbacks/new", auth, feedbackController.addFeedback);
-
-// get alll feedbacks
-//public route no auth required
 app.get("/server/feedbacks", feedbackController.getAllFeedback)
-
-// edit feedback endpoint
-//private route user must be authenticated
-app.put("/server/feedbacks/delete/:id", feedbackController.deleteFeedback)
-
-// get one feedback
-//public route no auth required
+app.delete("/server/feedbacks/delete/:id", [authenticate, authorize], feedbackController.deleteFeedback)
 app.get("/server/feedback/:id", feedbackController.getFeedback)
-
-// update feed
-app.put("/server/feedbacks/edit/:id", feedbackController.editFeedback);
-
-// delete feedback
-//privat toute auth required and only admin users can delete
-app.post("/server/feedback/:feedId", feedbackController.deleteFeedback)
+app.put("/server/feedbacks/edit/:id", authenticate, feedbackController.editFeedback);
 
 
-// bog endpoints
-// get all blog post
-// public route no auth required
+
+// bog routes
 app.get("/server/blog/all", blogController.getAllBlog)
+app.post("/server/blog/add", [authenticate, authorize], blogController.addNew)
+app.put("/server/blog/edit/:id",[authenticate, authorize], blogController.editPost)
+app.delete("/server/blog/delete/:id", [authenticate, authorize], blogController.deletePost)
 
-// add new post
-// private route auth and only admin users can add
-app.post("/server/blog/add", blogController.addNew)
 
-// update post route
-//priate route auth and only admin users can update
-app.post("/server/blog/edit/:id", blogController.editPost)
-
-// delete post route
-//private route auth and only admin users can delete
-app.post("/server/blog/delete/:id", blogController.deletePost)
-
-// users routes
-// signup route
-// public route no auth required
+//user routes
+app.post("/server/login", userController.login)
+app.get("/server/user", auth, userController.getUser)
 app.post("/server/signup", userController.signup)
 
-//login route
-//public route no auth required
-app.post("/server/login", userController.login)
 
-// get user details
-app.get("/server/user", auth, userController.getUser)
-
-
-// services
+// services routes
 app.get("/server/services", servicesController.getServices);
-app.post("/server/services/new", servicesController.addService)
+app.post("/server/services/new", [authenticate, authorize], servicesController.addService)
+app.put("/server/services/edit/:id", [authenticate, authorize], servicesController.updateService);
+app.delete("/server/services/delete/:id", [authenticate, authorize], servicesController.deleteService)
 
 // server 
 db.sequelize.sync().then(() => {

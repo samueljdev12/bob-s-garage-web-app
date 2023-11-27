@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { editPost } from "./BlogReducer";
 const baseUrl = "http://localhost:3001/server/feedbacks";
+import setAuthToken from "../src/utils/setToken";
 
 const initialState = {
     feedbacks: [],
@@ -13,6 +13,7 @@ const initialState = {
 // get all feedbacks 
 export const getAllFeedbacks = createAsyncThunk("feedbacks/all", async() =>{
     try {
+        setAuthToken(localStorage.token)
         const res = await axios.get(baseUrl);
         console.log(res.data)
         return res.data
@@ -24,6 +25,7 @@ export const getAllFeedbacks = createAsyncThunk("feedbacks/all", async() =>{
 //add new feedback
 export const addFeedabck = createAsyncThunk("feedbacks/add", async(formData) =>{
     try {
+        setAuthToken(localStorage.token)
          const res = await axios.post(`${baseUrl}/new`, formData);
          return res.data
     } catch (err) {
@@ -32,8 +34,11 @@ export const addFeedabck = createAsyncThunk("feedbacks/add", async(formData) =>{
 })
 
 //delete feedback
-export const editFeedback = createAsyncThunk("feedbacks/edit", async(formData, id) =>{
+export const editFeedback = createAsyncThunk("feedbacks/edit", async(formData) =>{
+    const id = formData.feedId;
+    console.log(`id in editreducer is ${id}`)
     try {
+        setAuthToken(localStorage.token)
         const res = await axios.put(`${baseUrl}/edit/${id}`, formData);
         return res.data
     } catch (err) {
@@ -42,10 +47,10 @@ export const editFeedback = createAsyncThunk("feedbacks/edit", async(formData, i
 })
 
 //delete feedback
-export const deleteFeeback = createAsyncThunk("feedbacks/add", async(formData) =>{
-    const id = formData.feedId
+export const deleteFeeback = createAsyncThunk("feedbacks/add", async({id}) =>{
     try {
-         const res = await axios.put(`${baseUrl}/delete/${id}`);
+        setAuthToken(localStorage.token)
+         const res = await axios.delete(`${baseUrl}/delete/${id}`);
          return res.data
     } catch (err) {
         return err.message
@@ -74,10 +79,11 @@ const feedbackSlice = createSlice({
             state.status = "loading"
          })
          .addCase(editFeedback.fulfilled, (state, action) =>{
+            state.status = "success"
             const updatedFeedback = action.payload;
     
             // Find the index of the post to be updated
-            const index = state.feedbacks.findIndex((feedback) => feedback.feedId === updatedFeedback.id);
+            const index = state.feedbacks.findIndex((feedback) => feedback.feedId === updatedFeedback);
     
             if (index !== -1) {
               // If the post is found, update it
@@ -103,6 +109,7 @@ const feedbackSlice = createSlice({
             state.status = "idle"
             state.error = true
          })
+         
     }
 })
 

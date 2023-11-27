@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FiTrash } from 'react-icons/fi';
 import {useSelector, useDispatch} from "react-redux";
-import { selectAllFeedbacks } from '../../../../reducers/FeedbackSlice';
+import { selectAllFeedbacks, deleteFeeback } from '../../../../reducers/FeedbackSlice';
 import { Link } from 'react-router-dom';
 import { isAuth } from '../../../../reducers/authSlice';
 const FeedbackList = () => {
@@ -9,10 +9,12 @@ const FeedbackList = () => {
   const isAuthenticated = useSelector(isAuth);
   const isAdmin = localStorage.getItem("isAdmin")
   // Dummy data for illustration
+  const dispatch = useDispatch();
  
 
   const handleDelete = (id) => {
     // Add logic to handle feedback deletion
+     dispatch(deleteFeeback({id}))
     console.log(`Delete feedback with ID: ${id}`);
   };
 

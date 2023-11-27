@@ -5,8 +5,9 @@ import { useState } from 'react';
 import {Link} from "react-router-dom"
 
 const Register = () => {
+  const [requestStatus, setRequestStatus] = useState("idle");
   const dispacth = useDispatch();
-  const status = useSelector(getStatus);
+  const status = requestStatus;
   console.log(status)
   const [formData, setFormData] = useState({
     firstName: '',
@@ -79,7 +80,14 @@ const Register = () => {
     if (Object.keys(errors).length === 0) {
       // Form is valid - you can handle registration or submission logic here
       console.log('Form data:', formData);
-      dispacth(register(formData))
+      try {
+        dispacth(register(formData))
+        setRequestStatus("success")
+      } catch (error) {
+        setRequestStatus("failed")
+      }finally{
+        setRequestStatus("idle")
+      }
       
     }
   };

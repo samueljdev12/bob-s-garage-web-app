@@ -42,7 +42,7 @@ const Blog = () => {
         {posts.map((post) => (
           <div className="col-md-4" key={post.postId}>
             <div className="card mb-4">
-              <img src={post.image} className="card-img-top" alt={post.title} />{" "}
+              <img src={post.image} className="card-img-top " alt={post.title} />{" "}
               {/* Image added here */}
               <div className="card-body">
                 <h5 className="card-title">{post.title}</h5>

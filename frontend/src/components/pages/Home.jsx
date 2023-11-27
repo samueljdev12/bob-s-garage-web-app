@@ -4,12 +4,10 @@ import { FiCompass, FiInfo, FiMapPin, FiPhone, FiMail } from 'react-icons/fi';
 
 
 const Home = () => {
-  console.log(`the token is ${localStorage.token}`)
- 
   return (
     <div className='text-center'> 
       <section className="hero text-center py-5">
-        <div className="container border p-5">
+        <div className="container bg-primary bg-opacity-75 bg-gradient text-white  border rounded p-5">
           <h1>Welcome to Bobs Garage</h1>
           <p className="lead">
             Your trusted automotive service provider for over a decade.
@@ -20,7 +18,7 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="about-us bg-light py-5">
+      <section className="about-us bg-primary bg-gradient py-5 text-light rounded ">
         <div className="container">
           <h2 className="text-center">About Us</h2>
           <p>
@@ -28,7 +26,7 @@ const Home = () => {
             experienced and certified mechanics are passionate about cars and committed to ensuring your vehicle runs
             smoothly.
           </p>
-          <Link to="/about" className="btn btn-secondary">
+          <Link to="/about" className="btn btn-primary border-5 rounded ">
             Learn More<FiInfo className='mx-1'></FiInfo>
           </Link>
         </div>
@@ -40,7 +38,7 @@ const Home = () => {
           <div className="row">
             <div className="col-md-4">
               <div className="card">
-                <div className="card-body">
+                <div className="card-body bg-dark bg-gradient  text-white p-md-5">
                   <h5 className="card-title">Engine Repair</h5>
                   <p className="card-text">
                     We offer expert engine diagnostics and repair services.
@@ -50,7 +48,7 @@ const Home = () => {
             </div>
             <div className="col-md-4">
               <div className="card">
-                <div className="card-body">
+                <div className="card-body bg-dark bg-gradient   text-white p-md-5">
                   <h5 className="card-title">Brake Maintenance</h5>
                   <p className="card-text">Trust us for your brake system maintenance needs.</p>
                 </div>
@@ -58,7 +56,7 @@ const Home = () => {
             </div>
             <div className="col-md-4">
               <div className="card">
-                <div className="card-body">
+                <div className="card-body bg-dark bg-gradient text-white p-md-5">
                   <h5 className="card-title">Transmission Services</h5>
                   <p className="card-text">Quality transmission repair and maintenance.</p>
                 </div>

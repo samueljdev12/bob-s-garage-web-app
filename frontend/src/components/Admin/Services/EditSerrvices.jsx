@@ -1,18 +1,24 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FiEdit, FiAlignLeft, FiDollarSign } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
-import { getAllServices, addServices } from "../../../../reducers/ServiceSlice";
-import { Link, useNavigate } from "react-router-dom";
+import { editService, selectService} from "../../../../reducers/ServiceSlice";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-const AddService = () => {
+const EditService = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [requestStatus, setRequestStatus] = useState("idle");
+  let {id} = useParams();
+  id = parseInt(id);
+
+  const service = useSelector((state) => selectService(state, id))
+  console.log(service)
 
   const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: 0,
+    name: service?.name || "",
+    description: service?.description || "",
+    price: service?.price || 0,
+    serviceId: service?.serviceId || 0
   });
 
   const handleInputChange = (e) => {
@@ -28,7 +34,7 @@ const AddService = () => {
     // Add logic to handle service submission
     console.log("Form data:", formData);
     try {
-      dispatch(addServices(formData));
+      dispatch(editService(formData));
       setRequestStatus("success");
       showPopup()
     } catch (error) {
@@ -75,7 +81,7 @@ const AddService = () => {
                 aria-label="Close"
               ></button>
             </div>
-            <div className="modal-body">Service added with success.</div>
+            <div className="modal-body">Service updated with success.</div>
             <div className="modal-footer">
               <button
                 
@@ -136,7 +142,7 @@ const AddService = () => {
               />
             </div>
             <button type="submit" className="btn btn-primary">
-              Add Service
+              Update Service
             </button>
           </form>
         </div>
@@ -145,4 +151,4 @@ const AddService = () => {
   );
 };
 
-export default AddService;
+export default EditService;

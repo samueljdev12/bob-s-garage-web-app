@@ -9,10 +9,11 @@ import setAuthToken from "../src/utils/setToken";
 
 // initial state
 const initialState = {
-  isAuth: !!localStorage.getItem("token"),
+  isAuth: localStorage.getItem("token") ? true: false,
   user: {},
   token: localStorage.getItem("token"),
   status: "idle",
+  isAdmin: false,
   error: {},
 };
 
@@ -21,7 +22,6 @@ export const loginAsync = createAsyncThunk("auth/login", async (formData) => {
   console.log("login in");
   try {
     const response = await axios.post(`${baseUrl}/login`, formData);
-
     localStorage.setItem("token", response.data.token);
     return response.data.token;
   } catch (err) {
@@ -36,8 +36,7 @@ export const getUser = createAsyncThunk("auth/user", async() => {
   try {
     setAuthToken(localStorage.token)
     const res = await axios.get(`${baseUrl}/user`)
-    const isAdmin = res.data.isAdmin;
-    localStorage.setItem("isAdmin", isAdmin);
+    localStorage.setItem("isAdmin", res.data.isAdmin)
     return res.data
   } catch (err) {
     return err.message
@@ -63,8 +62,9 @@ const authSlice = createSlice({
   reducers: {
     logout: (state)=>{
         localStorage.removeItem("token");
-        state.isAuth = false;
         localStorage.removeItem("isAdmin");
+        state.isAuth = false;
+        
     }
   },
   extraReducers: (builder) => {
@@ -86,8 +86,9 @@ const authSlice = createSlice({
         state.status = "loading";
       })
       .addCase(getUser.fulfilled, (state, action) =>{
-        state.status = "success";
+        state.status = "success"
         state.user = action.payload
+        state.isAdmin = action.payload.isAdmin
       })
       .addCase(getUser.rejected, (state, action) =>{
         state.status = "failed";
@@ -112,6 +113,7 @@ const authSlice = createSlice({
 
 export const getAuthUser = (state) => state.auth.user;
 export const isAuth = (state) => state.auth.isAuth;
+export const isAdmin = (state) => state.auth.isAdmin;
 export const getStatus = (state) => state.auth.status;
 
 

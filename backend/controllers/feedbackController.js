@@ -57,7 +57,7 @@ const editFeedback = async (req, res) => {
   const { content, UserUserId } = req.body;
   try {
     const feedback = await Feedback.update({content, UserUserId}, {where: {feedId: id}});
-    res.send(feedback)
+    res.status(200).json(feedback)
   } catch (error) {
     res.status(500).json(error)
   }
@@ -71,7 +71,7 @@ const deleteFeedback = async (req, res) => {
     console.log(id)
     try {
         const feedback = await Feedback.destroy({where: {feedId: id}})
-        res.send(feedback)
+        res.status(200).json(feedback)
     } catch (error) {
         res.status(500).json(error)
     }

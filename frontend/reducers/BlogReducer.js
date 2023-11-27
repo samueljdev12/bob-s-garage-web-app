@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 const baseUrl = "http://localhost:3001/server/blog";
+import setAuthToken from "../src/utils/setToken";
 
 // inital state
 const initialState = {
@@ -12,6 +13,7 @@ const initialState = {
 // get all blog post
 export const getPost = createAsyncThunk("blog/all", async() =>{
     try {
+    setAuthToken(localStorage.token)
     const res = await axios.get(`${baseUrl}/all`);
     console.log(res.data)
     return res.data;
@@ -23,6 +25,7 @@ export const getPost = createAsyncThunk("blog/all", async() =>{
 // add new post
 export const addPost = createAsyncThunk("blog/add", async(FormData) =>{
     try {
+        setAuthToken(localStorage.token)
         const res = await axios.post(`${baseUrl}/add`, FormData);
         return res.data
     } catch (err) {
@@ -34,7 +37,8 @@ export const addPost = createAsyncThunk("blog/add", async(FormData) =>{
 export const editPost = createAsyncThunk("blog/edit", async(FormData) =>{
     const id = FormData.postId;
     try {
-        const res = await axios.post(`${baseUrl}/edit/${id}`, FormData);
+        setAuthToken(localStorage.token)
+        const res = await axios.put(`${baseUrl}/edit/${id}`, FormData);
         return res.data
     } catch (err) {
         return err.message;
@@ -43,7 +47,8 @@ export const editPost = createAsyncThunk("blog/edit", async(FormData) =>{
 
 export const deletePost = createAsyncThunk("blog/delete", async(id) =>{
     try {
-        const res = await axios.post(`${baseUrl}/delete/${id}`);
+        setAuthToken(localStorage.token)
+        const res = await axios.delete(`${baseUrl}/delete/${id}`);
         return res.data
     } catch (err) {
         return err.message;

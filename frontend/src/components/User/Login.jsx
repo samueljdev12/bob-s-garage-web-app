@@ -11,11 +11,11 @@ const Login = () => {
     password: '',
   });
 
+  const [requestStatus, setRequestStatus] = useState("idle");
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(isAuth);
-  const status = useSelector(getStatus);
-  console.log(status)
+  const status = requestStatus
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -38,8 +38,18 @@ const Login = () => {
 
     if (Object.keys(errors).length === 0) {
       // Form is valid - you can handle login or submission logic here
-      console.log('Form data:', formData);
-      dispatch(loginAsync(formData))
+      setRequestStatus("loading")
+      try {
+        dispatch(loginAsync(formData)).then(() =>{
+          dispatch(getUser());
+          navigate("/")
+        })
+        setRequestStatus("success")
+      } catch (error) {
+        setRequestStatus("error")
+      }finally{
+        setRequestStatus("idle")
+      }
     }
   };
 
@@ -48,11 +58,6 @@ const Login = () => {
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
     return emailRegex.test(email);
   };
-
-   if(status === "success"){
-    dispatch(getUser());
-    navigate("/")
-   }
 
    if(status === "failed"){
     return (<div className="container-error px-3">

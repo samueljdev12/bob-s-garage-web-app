@@ -38,7 +38,7 @@ const deleteService = async (req, res) =>{
   
     try {
          const service = await Service.destroy({where: {serviceId: id}})
-         res.send("Sevice deleted succesfully")
+         res.status(200).json(service)
     } catch (error) {
         res.status(500).json(error)
     }
@@ -52,7 +52,7 @@ const updateService = async (req, res) =>{
     const {name, description, price} = req.body;
     try {
         const service = await Service.update({name, description, price}, {where: {serviceId: id}})
-        res.send("service updated successfully")
+        res.status(200).json(service)
     } catch (error) {
         res.status(500).json(error)
     }

@@ -5,16 +5,21 @@ import { useSelector, useDispatch } from "react-redux";
 import { selectUserFeedback, editFeedback } from '../../../reducers/FeedbackSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 const EditFeedback = () => {
+  // vairables 
   const isAuthenticated = useSelector(isAuth);
   const user = useSelector(getAuthUser)
   const userFeed = useSelector((state) => selectUserFeedback(state, user.userId))
   const dispatch = useDispatch();
   const navaigate = useNavigate();
+
+  // state
   const [formData, setFormData] = useState({
+    feedId: userFeed?.feedId || 0,
     content: userFeed?.content || "",
     UserUserId: user?.userId || 0
   });
 
+  // request state
   const [requestStatus, setRequestStatus] = useState("idle");
 
   const handleInputChange = (e) => {
@@ -31,7 +36,9 @@ const EditFeedback = () => {
     setRequestStatus("loading")
     // Add logic to handle post submission
     try {
-      dispatch(editFeedback(formData, 3))
+      dispatch(editFeedback(formData))
+      setRequestStatus("success")
+      navaigate("/")
     } catch (error) {
       setRequestStatus("error")
     }finally{
@@ -40,6 +47,8 @@ const EditFeedback = () => {
     // Add logic to handle feedback submission
     console.log('Form data:', formData);
   };
+  
+  
 
   if(!isAuthenticated){
     return(

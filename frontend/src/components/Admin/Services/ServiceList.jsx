@@ -1,26 +1,44 @@
-import React, { useState } from 'react';
 import { FiTrash, FiEdit } from 'react-icons/fi';
+import {useSelector, useDispatch} from "react-redux";
+import { getAllServices, deleteService} from '../../../../reducers/ServiceSlice';
+import { Link } from 'react-router-dom';
 
 const ServiceList = () => {
-  // Dummy data for illustration
-  const dummyServices = [
-    { id: 1, name: 'Service 1', description: 'Lorem ipsum dolor sit amet.', price: 50.00 },
-    { id: 2, name: 'Service 2', description: 'Consectetur adipiscing elit.', price: 75.00 },
-    { id: 3, name: 'Service 3', description: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', price: 100.00 },
-  ];
+  const dispactch = useDispatch();
+  const services = useSelector(getAllServices);
+  console.log(services)
 
   const handleDelete = (id) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this Service?');
+    if(confirmDelete){
+      dispactch(deleteService({id}))
+    }
     // Add logic to handle service deletion
     console.log(`Delete service with ID: ${id}`);
   };
 
-  const handleEdit = (id) => {
-    // Add logic to handle service editing
-    console.log(`Edit service with ID: ${id}`);
-  };
+
+
+  if(!Array.isArray(services) || services.length <= 0 ){
+    return (
+      <div className="container-error px-3">
+        <div className='text-center'>
+            <Link to="/admin/add_service" className='btn btn-outline-primary m-3'>Add Service</Link>
+        </div>
+      <div className="row">
+      <div className="alert alert-info" role="alert">
+        An error occured while fetching services, refresh page and try again
+      </div>
+      </div>
+      </div>
+    )
+  }
 
   return (
     <div className="container py-5">
+        <div className='text-center'>
+            <Link to="/admin/add_service" className='btn btn-outline-primary m-3'>Add Service</Link>
+        </div>
       <div className="row justify-content-center">
         <div className="col-md-8">
           <h2 className="mb-4">Service List</h2>
@@ -34,24 +52,24 @@ const ServiceList = () => {
               </tr>
             </thead>
             <tbody>
-              {dummyServices.map((service) => (
-                <tr key={service.id}>
+              {services.map((service) => (
+                <tr key={service.serviceId}>
                   <td>{service.name}</td>
                   <td>{service.description}</td>
-                  <td>${service.price.toFixed(2)}</td>
+                  <td>${service.price}</td>
                   <td>
                     <button
                       className="btn btn-danger btn-sm me-2"
-                      onClick={() => handleDelete(service.id)}
+                      onClick={() => handleDelete(service.serviceId)}
                     >
                       <FiTrash /> Delete
                     </button>
-                    <button
+                    <Link to={`/admin/services/service/edit/${service.serviceId}`}
                       className="btn btn-warning btn-sm"
-                      onClick={() => handleEdit(service.id)}
+                      
                     >
                       <FiEdit /> Edit
-                    </button>
+                    </Link>
                   </td>
                 </tr>
               ))}
