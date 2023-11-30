@@ -9,7 +9,8 @@ const Nav = () => {
   const navigate = useNavigate();
   const handleLogout = () =>{
      dispatch(logout())
-     navigate("/")
+     navigate("/login")
+     window.location.reload(true);
   }
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-dark p-4">

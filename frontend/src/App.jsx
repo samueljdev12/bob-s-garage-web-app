@@ -24,13 +24,31 @@ import EditPost from './components/Admin/Blog/EditPost';
 import EditFeedback from './components/Feedback/EditFeedback';
 import EditService from './components/Admin/Services/EditSerrvices';
 
+// themes
+import { ThemeConsumer, ThemeProvider } from 'styled-components';
+import { GlobalStyles } from './components/theme/globalStyles';
+import { lightTheme, darkTheme } from './components/theme/Theme';
+import { useState, useEffect } from 'react';
+import { useDarkMode } from './components/theme/UserDarkMode';
+import EditProfile from './components/User/EditProfile';
+
+
 function App() {
 
-console.log(localStorage.getItem("isAdmin"));
 const isAdmin = localStorage.getItem("isAdmin");
+const [theme, themeToggler, mountedComponent] = useDarkMode();
+const themeMode = theme === 'light' ? lightTheme : darkTheme;
+
+if(!mountedComponent) return <div/>
+
   return (
     <Router>
+      <ThemeProvider theme={themeMode}>
+
+      <button onClick={themeToggler}>Switch Theme</button>
+
       {isAdmin  === "true" ? <Header/> : <Nav/>}
+      <GlobalStyles/>
       <div className='wrapper'>
       <Routes>
          <Route path='/about_us' element={<AboutUs/>}></Route>
@@ -38,6 +56,7 @@ const isAdmin = localStorage.getItem("isAdmin");
          <Route path='/services' element={<Services/>}></Route>
          {<Route path='/register' element={<Register/>}></Route> }
          <Route path='/login' element={<Login/>}></Route>
+         <Route path='/user/edit' element={<EditProfile/>}></Route>
          <Route path='/faq' element={<Faq/>}></Route>
          <Route path='/privacy-policy' element={<Privacy/>}></Route>
          <Route path='/blog' element={<Blog/>}></Route>
@@ -46,6 +65,7 @@ const isAdmin = localStorage.getItem("isAdmin");
          <Route path='/blog/post/:postId' element={<SinglePost/>}></Route>
          <Route path='/testimonials/new' element={<AddFeedback/>}></Route>
          <Route path='/testimonials/edit/:id' element={<EditFeedback/>}></Route>
+         
          {/* admin routes */}
          <Route path='/admin/add_post' element={<AddPost/>}></Route>
          <Route path='/admin/add_service' element={<AddService/>}></Route>
@@ -54,11 +74,10 @@ const isAdmin = localStorage.getItem("isAdmin");
           <Route path='/admin/services' element={<ServiceList/>}></Route>
           <Route path='/admin/post/edit/:id' element={<EditPost/>}></Route>
           <Route path='/admin/services/service/edit/:id' element={<EditService/>}></Route>
-          
-         
       </Routes>
       </div>
       <Footer/>
+      </ThemeProvider>
     </Router>
   )
 }

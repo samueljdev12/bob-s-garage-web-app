@@ -1,71 +1,72 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-// importing axiso for connecting to the backend
 import axios from "axios";
-//setting base url
-const baseUrl = "http://localhost:3001/server";
-
-// import set token util
 import setAuthToken from "../src/utils/setToken";
 
-// initial state
+const baseUrl = "http://localhost:3001/server";
+
 const initialState = {
-  isAuth: localStorage.getItem("token") ? true: false,
+  isAuth: localStorage.getItem("token") ? true : false,
   user: {},
   token: localStorage.getItem("token"),
   status: "idle",
   isAdmin: false,
-  error: {},
 };
 
-// login asychronously function start
 export const loginAsync = createAsyncThunk("auth/login", async (formData) => {
-  console.log("login in");
   try {
     const response = await axios.post(`${baseUrl}/login`, formData);
     localStorage.setItem("token", response.data.token);
     return response.data.token;
   } catch (err) {
-    return err.tmessage;
+    throw err.response.data;
   }
 });
 
-// login asychronously function end
-
-// get user
-export const getUser = createAsyncThunk("auth/user", async() => {
+export const getUser = createAsyncThunk("auth/user", async () => {
   try {
-    setAuthToken(localStorage.token)
-    const res = await axios.get(`${baseUrl}/user`)
-    localStorage.setItem("isAdmin", res.data.isAdmin)
-    return res.data
+    setAuthToken(localStorage.token);
+    const res = await axios.get(`${baseUrl}/user`);
+    localStorage.setItem("isAdmin", res.data.isAdmin);
+    return res.data;
   } catch (err) {
-    return err.message
+    throw err.response.data;
   }
 });
-// get user end
 
-// create user 
-export const register = createAsyncThunk("auth/register", async(fromData) =>{
+export const register = createAsyncThunk("auth/register", async (formData) => {
   try {
-      const res = await axios.post(`${baseUrl}/signup`, fromData);
-      console.log(res.data)
-      return true;
+    const res = await axios.post(`${baseUrl}/signup`, formData);
+    return true;
   } catch (err) {
-    return err.message;
+    throw err.response.data;
   }
-})
+});
 
-// auth slice
+export const edit = createAsyncThunk("auth/edit", async (formData) => {
+  setAuthToken(localStorage.token);
+  try {
+    const res = await axios.post(`${baseUrl}/us/edit`, formData);
+    return res.data;
+  } catch (err) {
+    throw err.response.data;
+  }
+});
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    logout: (state)=>{
-        localStorage.removeItem("token");
-        localStorage.removeItem("isAdmin");
-        state.isAuth = false;
-        
-    }
+    logout: (state) => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("isAdmin");
+      state.isAuth = false;
+    },
+    resetError: (state) => {
+      state.error = null;
+    },
+    resetStatus: (state) => {
+      state.status = "idle";
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -74,49 +75,55 @@ const authSlice = createSlice({
       })
       .addCase(loginAsync.fulfilled, (state, action) => {
         state.status = "success";
-        state.token = action.payload.token;
+        state.token = action.payload;
       })
-      .addCase(loginAsync.rejected, (state, action) => {
+      .addCase(loginAsync.rejected, (state) => {
         state.status = "failed";
-        state.error = action.payload.Error.message;
+        
       })
-
-      //get user
-      .addCase(getUser.pending, (state) =>{
+      .addCase(getUser.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(getUser.fulfilled, (state, action) =>{
-        state.status = "success"
-        state.user = action.payload
-        state.isAdmin = action.payload.isAdmin
+      .addCase(getUser.fulfilled, (state, action) => {
+        state.status = "success";
+        state.user = action.payload;
+        state.isAdmin = action.payload.isAdmin;
       })
-      .addCase(getUser.rejected, (state, action) =>{
+      .addCase(getUser.rejected, (state) => {
         state.status = "failed";
         state.user = {};
-        state.error = action.error.message;
+        
       })
-      //get user end
-
-      // signup
-      .addCase(register.pending, (state) =>{
+      .addCase(register.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(register.fulfilled, (state) =>{
+      .addCase(register.fulfilled, (state) => {
         state.status = "success";
       })
-      .addCase(register.rejected, (state, action) =>{
-        state.status = "failed"
-        state.error = action.error.message
+      .addCase(register.rejected, (state) => {
+        state.status = "failed";
+       
       })
-  }
+      .addCase(edit.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(edit.fulfilled, (state, action) => {
+        state.status = "success";
+        state.user = action.payload;
+      })
+      .addCase(edit.rejected, (state) => {
+        state.status = "failed";
+        
+      });
+  },
 });
 
 export const getAuthUser = (state) => state.auth.user;
 export const isAuth = (state) => state.auth.isAuth;
 export const isAdmin = (state) => state.auth.isAdmin;
 export const getStatus = (state) => state.auth.status;
+export const getError = (state) => state.auth.error; 
 
-
-export const {logout} = authSlice.actions;
+export const { logout, resetError, resetStatus } = authSlice.actions;
 
 export default authSlice.reducer;

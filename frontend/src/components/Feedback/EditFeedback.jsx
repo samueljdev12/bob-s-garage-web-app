@@ -1,16 +1,21 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FiMessageSquare } from 'react-icons/fi';
 import { isAuth, getAuthUser } from "../../../reducers/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { selectUserFeedback, editFeedback } from '../../../reducers/FeedbackSlice';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import PopUp from '../layouts/PopUp';
+import { showPopup } from '../../utils/ShowPoup';
+// unwrap for dispatch
+import { unwrapResult } from '@reduxjs/toolkit';
+
 const EditFeedback = () => {
   // vairables 
   const isAuthenticated = useSelector(isAuth);
   const user = useSelector(getAuthUser)
   const userFeed = useSelector((state) => selectUserFeedback(state, user.userId))
   const dispatch = useDispatch();
-  const navaigate = useNavigate();
+  const navigate = useNavigate();
 
   // state
   const [formData, setFormData] = useState({
@@ -19,9 +24,7 @@ const EditFeedback = () => {
     UserUserId: user?.userId || 0
   });
 
-  // request state
-  const [requestStatus, setRequestStatus] = useState("idle");
-
+// handle form changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -30,22 +33,28 @@ const EditFeedback = () => {
     });
   };
 
-  console.log(`The userid is ${formData.UserUserId} and type is ${typeof(formData.UserUserId)}`)
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    setRequestStatus("loading")
     // Add logic to handle post submission
     try {
-      dispatch(editFeedback(formData))
-      setRequestStatus("success")
-      navaigate("/")
-    } catch (error) {
-      setRequestStatus("error")
-    }finally{
-      setRequestStatus("idle")
+
+      const resultAction = await dispatch(editFeedback(formData));
+      
+      // Use unwrapResult to extract the fulfilled value
+      const originalPromiseResult = unwrapResult(resultAction);
+       if(originalPromiseResult){
+        showPopup("success", "/customer-account", navigate, {
+          title: "Success",
+          body: " Update with success",
+          footer: "You will be redirected in 3 seconds.."
+        });
+       }
+      
+    } catch (rejectedValueOrSerializedError) {
+       // Handle the error here
+       const errorMessage = rejectedValueOrSerializedError.message || 'An error occurred';
+       alert(errorMessage);
     }
-    // Add logic to handle feedback submission
-    console.log('Form data:', formData);
   };
   
   
@@ -64,6 +73,7 @@ const EditFeedback = () => {
   
   return (
     <div className="container py-5">
+      <PopUp/>
       <div className="row justify-content-center">
         <div className="col-md-8">
           <h2 className="mb-4">Add Feedback</h2>

@@ -1,27 +1,45 @@
 import { FiTrash, FiEdit } from 'react-icons/fi';
 import {useDispatch, useSelector} from "react-redux";
-import { selectPosts, getPost } from '../../../../reducers/BlogReducer';
-import { Link, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { selectPosts } from '../../../../reducers/BlogReducer';
+import { Link } from 'react-router-dom';
 import { deletePost } from '../../../../reducers/BlogReducer';
 import { isAuth } from '../../../../reducers/authSlice';
+// unwrap for dispatch
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const PostList = () => {
   
+  // variables
   const disptach = useDispatch();
   const posts = useSelector(selectPosts) || []
   const isAuthenticated = useSelector(isAuth);
   const isAdmin = localStorage.getItem("isAdmin")
-
-  const handleDelete = (id) => {
+ 
+  // delete handler
+  const handleDelete = async (id) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this post?');
     // Add logic to handle post deletion
     if(confirmDelete){
-      disptach(deletePost(id))
+      try {
+        const resultAction = await disptach(deletePost(id));
+        
+        // Use unwrapResult to extract the fulfilled value
+        const originalPromiseResult = unwrapResult(resultAction);
+        
+          if(originalPromiseResult){
+            alert("Post was delete successfully")
+          }
+        
+        } catch (error) {
+          // Handle the error here
+         
+         alert(error.message);
+        }
+
     }
-    console.log(`Delete post with ID: ${id}`);
   };
   
+  // unathorized users 
   if(!isAuthenticated || isAdmin != "true"){
     return(
       <div className="container-error px-3">
@@ -42,7 +60,7 @@ const PostList = () => {
         </div>
       <div className="row">
       <div className="alert alert-info" role="alert">
-        An error occured while fetching post, refresh page and try again
+        No post to show
       </div>
       </div>
       </div>

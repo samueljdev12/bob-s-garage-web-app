@@ -1,20 +1,28 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FiEdit, FiAlignLeft, FiDollarSign } from "react-icons/fi";
-import { useSelector, useDispatch } from "react-redux";
-import { getAllServices, addServices } from "../../../../reducers/ServiceSlice";
-import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import {addServices } from "../../../../reducers/ServiceSlice";
+import { useNavigate } from "react-router-dom";
+import PopUp from "../../layouts/PopUp";
+import { showPopup } from "../../../utils/ShowPoup";
+// unwrap for dispatch
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const AddService = () => {
+
+  // variables 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [requestStatus, setRequestStatus] = useState("idle");
-
+  
+  // form state
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     price: 0,
   });
 
+
+// form  change handler
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -23,71 +31,34 @@ const AddService = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  // submit form handler
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add logic to handle service submission
-    console.log("Form data:", formData);
+
     try {
-      dispatch(addServices(formData));
-      setRequestStatus("success");
-      showPopup()
-    } catch (error) {
-      setRequestStatus("failed");
+      const resultAction = await dispatch(addServices(formData));
+      
+      // Use unwrapResult to extract the fulfilled value
+      const originalPromiseResult = unwrapResult(resultAction);
+      if(originalPromiseResult){
+        showPopup("success", "/admin/services", navigate, {
+          title: "Success",
+          body: " Added with success",
+          footer: "You will be redirected in 3 seconds.."
+        });
+      }
+      
+    } catch (rejectedValueOrSerializedError) {
+      const errorMessage = rejectedValueOrSerializedError.message || 'An error occurred';
+      alert(errorMessage);
     }
   };
 
-  // show popup
-  function showPopup() {
-    var myModal = new bootstrap.Modal(document.getElementById("exampleModal1"));
-    myModal.show();
-  }
 
   return (
     // modal
     <div className="container py-5">
-      <button
-        type="button"
-        className="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#exampleModal1"
-        style={{ display: "none" }}
-      >
-        Open Popup
-      </button>
-
-      <div
-        className="modal fade"
-        id="exampleModal1"
-        tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalLabel">
-                Popup Title
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body">Service added with success.</div>
-            <div className="modal-footer">
-              <button
-                
-                className="btn btn-primary"
-                data-bs-dismiss="modal"
-              >
-                OK
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+       <PopUp/>
       {/* main conten */}
       <div className="row justify-content-center">
         <div className="col-md-8">

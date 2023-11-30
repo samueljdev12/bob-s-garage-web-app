@@ -7,7 +7,6 @@ import setAuthToken from "../src/utils/setToken";
 const initialState = {
     posts: [],
     status: 'idle',
-    error: false
 }
 
 // get all blog post
@@ -15,10 +14,9 @@ export const getPost = createAsyncThunk("blog/all", async() =>{
     try {
     setAuthToken(localStorage.token)
     const res = await axios.get(`${baseUrl}/all`);
-    console.log(res.data)
     return res.data;
     } catch (err) {
-        return err.message
+        throw err.response.data;
     }
 })
 
@@ -29,7 +27,7 @@ export const addPost = createAsyncThunk("blog/add", async(FormData) =>{
         const res = await axios.post(`${baseUrl}/add`, FormData);
         return res.data
     } catch (err) {
-        return err.message;
+        throw err.response.data;
     }
 })
 
@@ -41,7 +39,7 @@ export const editPost = createAsyncThunk("blog/edit", async(FormData) =>{
         const res = await axios.put(`${baseUrl}/edit/${id}`, FormData);
         return res.data
     } catch (err) {
-        return err.message;
+        throw err.response.data;
     }
 })
 
@@ -51,7 +49,7 @@ export const deletePost = createAsyncThunk("blog/delete", async(id) =>{
         const res = await axios.delete(`${baseUrl}/delete/${id}`);
         return res.data
     } catch (err) {
-        return err.message;
+        throw err.response.data;
     }
 })
 
@@ -71,21 +69,20 @@ const blogSlice = createSlice({
             
             
         })
-        .addCase(getPost.rejected, (state, action) =>{
+        .addCase(getPost.rejected, (state) =>{
             state.status = "idle"
             state.posts = []
-            state.error = true
         })
         .addCase(addPost.pending, (state) =>{
             state.status = "loading"
         })
         .addCase(addPost.fulfilled, (state, action) =>{
             state.status = "success"
-            state.posts = state.posts.push(action.payload)
+            state.posts = [...state.posts, action.payload]
         })
-        .addCase(addPost.rejected, (state, action) =>{
-            state.status = "rejected"
-            state.error = action.error.message
+        .addCase(addPost.rejected, (state) =>{
+            state.status = "failed"
+          
         })
         .addCase(editPost.pending, (state) =>{
             state.status = "idle"
@@ -95,7 +92,7 @@ const blogSlice = createSlice({
             const updatedPost = action.payload;
     
             // Find the index of the post to be updated
-            const index = state.posts.findIndex((post) => post.id === updatedPost.id);
+            const index = state.posts.findIndex((post) => post.postId === updatedPost.postId);
     
             if (index !== -1) {
               // If the post is found, update it
@@ -104,9 +101,8 @@ const blogSlice = createSlice({
             }
           })
 
-          .addCase(editPost.rejected, (state, action) => {
+          .addCase(editPost.rejected, (state) => {
             state.status = 'error';
-            state.error = action.error.message;
           })
 
           /// delet post
@@ -118,9 +114,8 @@ const blogSlice = createSlice({
             // Assuming the action.payload is the deleted post ID
             state.posts = state.posts.filter((post) => post.postId !== action.payload);
           })
-          .addCase(deletePost.rejected, (state, action) => {
+          .addCase(deletePost.rejected, (state) => {
             state.status = 'error';
-            state.error = action.error.message;
           })
     }
 })

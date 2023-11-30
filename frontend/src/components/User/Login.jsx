@@ -1,22 +1,25 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginAsync, isAuth, getStatus, getUser } from '../../../reducers/authSlice';
+import { useDispatch} from 'react-redux';
+import { loginAsync, getUser } from '../../../reducers/authSlice';
 import { useNavigate } from 'react-router-dom';
+// unwrap for dispatch
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const Login = () => {
+
+  //  variables
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
+  const dispatch = useDispatch();
+
+// form state
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
 
-  const [requestStatus, setRequestStatus] = useState("idle");
-  const [errors, setErrors] = useState({});
-  const dispatch = useDispatch();
-  const isAuthenticated = useSelector(isAuth);
-  const status = requestStatus
-
+  //handle input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -33,25 +36,38 @@ const Login = () => {
     setErrors(newErrors);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
 
     if (Object.keys(errors).length === 0) {
       // Form is valid - you can handle login or submission logic here
-      setRequestStatus("loading")
       try {
-        dispatch(loginAsync(formData)).then(() =>{
-          dispatch(getUser());
-          navigate("/")
-        })
-        setRequestStatus("success")
-      } catch (error) {
-        setRequestStatus("error")
-      }finally{
-        setRequestStatus("idle")
+        // Dispatch the loginAsync action
+        const resultAction = await dispatch(loginAsync(formData));
+      
+        // Use unwrapResult to extract the fulfilled value
+        const originalPromiseResult = unwrapResult(resultAction);
+      
+        // Dispatch getUser action
+        if(originalPromiseResult){
+          await dispatch(getUser());
+        }
+      
+        // Navigate to "/"
+        navigate("/");
+      
+        // Reload the window
+        window.location.reload(true);
+      
+      } catch (rejectedValueOrSerializedError) {
+        // Handle the error here
+        const errorMessage = rejectedValueOrSerializedError.message || 'An error occurred';
+        alert(errorMessage);
       }
     }
   };
+
+  //login login end
 
   // Email validation function
   const validateEmail = (email) => {
@@ -74,6 +90,9 @@ const Login = () => {
       <div className="row justify-content-center">
         <div className="col-md-6">
           <h2 className="mt-4">Login</h2>
+          <p className="mt-3">
+              Don't have an account? <a href="/register">Register</a>
+            </p>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">

@@ -3,13 +3,18 @@ import { isAuth, logout } from '../../../../reducers/authSlice';
 import { useSelector, useDispatch } from 'react-redux';
 
 const Header = () => {
+  
   const navigate = useNavigate();
   const isAuthentciated = useSelector(isAuth)
   const dispatch = useDispatch();
   const handleLogout = () =>{
      dispatch(logout())
      navigate("/")
+     window.location.reload(true)
   }
+   
+  
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light p-4">
       <div className="container">

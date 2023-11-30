@@ -13,10 +13,22 @@ const getAllBlog = async(req, res) =>{
 
     }catch(error){
         // send error back
-       res.status(500).json("An error occured while getting posts")
+       res.status(500).json("A server error occured while getting post")
     }
    
 }
+
+// get one post by id
+const getPost = async (req, res) => {
+    try {
+      let postId = req.params.id;
+      postId = parseInt(postId)
+      const feedback = await Blog.findByPk(postId);
+      res.status(200).json(feedback);
+    } catch (error) {
+      res.status(500).json("A server error occured")
+    }
+  };
 
 // add new blog post
 const addNew = async (req, res) =>{
@@ -35,7 +47,7 @@ const addNew = async (req, res) =>{
      res.status(200).json(post)
     } catch (error) {
         // send error back
-        res.status(500).json("An error occured while getting posts")
+        res.status(500).json("A server error occured while adding post")
 
     }
 
@@ -44,7 +56,8 @@ const addNew = async (req, res) =>{
 // edit route
 const editPost = async(req, res) =>{
     // get id from params
-   const id = req.params.id;
+   let id = req.params.id;
+   id = parseInt(id)
    // destructure req body
    const {title, content, image} = req.body;
    // handle exceptions
@@ -56,11 +69,13 @@ const editPost = async(req, res) =>{
            image
        }, {where: {postId: id}}
        )
+
+       const post = await Blog.findByPk(id)
         // send back message
-       res.status(200).json(updatedPost)
+       res.status(200).json(post)
    } catch (error) {
        // send back error message
-       res.status(500).json("An error occured")
+       res.status(500).json("A server error occured while editng post")
        
    }
    
@@ -70,17 +85,18 @@ const editPost = async(req, res) =>{
 const deletePost = async (req, res) =>{
     
     // get id from params
-    const id = req.params.id;
+      let id = req.params.id;
+      id = parseInt(id)
     // handle exceptions
     try {
         // delete post in database
         const deletedPost = await Blog.destroy({where: {postId: id}})
         
          // send back message
-        res.status(200).json(deletedPost)
+        res.status(200).json(id)
     } catch (error) {
         // send back error message
-        res.status(500).json("An error occured")
+        res.status(500).json("A server error occured while deleting post")
         
     }
 
@@ -90,5 +106,6 @@ module.exports = {
     getAllBlog,
     addNew,
     editPost,
-    deletePost
+    deletePost,
+    getPost
 }

@@ -1,14 +1,13 @@
 import { FiUser, FiMail, FiLock, FiUserPlus } from 'react-icons/fi';
-import { useDispatch, useSelector } from "react-redux";
-import { register, getStatus } from '../../../reducers/authSlice';
+import { useDispatch } from "react-redux";
+import { register} from '../../../reducers/authSlice';
 import { useState } from 'react';
 import {Link} from "react-router-dom"
+import { unwrapResult } from '@reduxjs/toolkit';
+
 
 const Register = () => {
-  const [requestStatus, setRequestStatus] = useState("idle");
-  const dispacth = useDispatch();
-  const status = requestStatus;
-  console.log(status)
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -71,7 +70,7 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     // Additional validation and form submission logic
@@ -79,44 +78,43 @@ const Register = () => {
 
     if (Object.keys(errors).length === 0) {
       // Form is valid - you can handle registration or submission logic here
-      console.log('Form data:', formData);
       try {
-        dispacth(register(formData))
-        setRequestStatus("success")
-      } catch (error) {
-        setRequestStatus("failed")
-      }finally{
-        setRequestStatus("idle")
+        // Dispatch the register action
+        const resultAction = await dispatch(register(formData));
+      
+        // Use unwrapResult to extract the fulfilled value
+        const originalPromiseResult = unwrapResult(resultAction);
+          if(originalPromiseResult){
+            // Alert for successful registration
+               alert('SignUp successful');
+          }
+        
+      } catch (rejectedValueOrSerializedError) {
+      
+        // Handle the error here
+        let errorMessage = 'An error occurred';
+      
+        // Check if the error object has a message property
+        if (rejectedValueOrSerializedError && rejectedValueOrSerializedError.message) {
+          errorMessage = rejectedValueOrSerializedError.message;
+        }
+      
+        // Show the error message in an alert
+        alert(errorMessage);
       }
       
     }
   };
 
-  if(status === "success"){
-    return (<div className="container-error px-3">
-    <div className="row">
-    <div className="alert alert-success" role="alert">
-        Your account have been created succesfully
-        <Link to="/login">Login here</Link>
-    </div>
-    </div>
-    </div>)
-  }
 
-  if(status === "failed"){
-    return (<div className="container-error px-3">
-    <div className="row">
-    <div className="alert alert-danger" role="alert">
-       An error occured try again!
-    </div>
-    </div>
-    </div>)
-  }
 
   return (
     <div className="container py-5">
       <div className="row justify-content-center">
         <div className="col-md-6">
+        <p className="mt-3">
+              Don't have an account? <a href="/register">Register</a>
+            </p>
           <h2 className="mt-4">Register</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
@@ -192,6 +190,9 @@ const Register = () => {
             <button type="submit" className="btn btn-primary mx-auto">
               Register<FiUserPlus></FiUserPlus>
             </button>
+            <p className="mt-3">
+              Don't have an account? <a href="/register">Register</a>
+            </p>
           </form>
         </div>
       </div>

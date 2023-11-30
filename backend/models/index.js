@@ -27,28 +27,71 @@ const User = sequelize.define("User", {
     },
     firstName: {
         type: DataTypes.STRING,
-         allowNull: false
+        allowNull: false,
+        validate: {
+            notNull: {
+                msg: 'First name cannot be empty.'
+            },
+            notEmpty: {
+                msg: 'First name cannot be empty.'
+            }
+        }
     },
     lastName: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notNull: {
+                msg: 'Last name cannot be empty.'
+            },
+            notEmpty: {
+                msg: 'Last name cannot be empty.'
+            }
+        }
     },
     email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: true,
+        validate: {
+            notNull: {
+                msg: 'Email cannot be empty.'
+            },
+            notEmpty: {
+                msg: 'Email cannot be empty.'
+            },
+            isEmail: {
+                msg: 'Invalid email format.'
+            }
+        }
     },
-
     password: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notNull: {
+                msg: 'Password cannot be empty.'
+            },
+            notEmpty: {
+                msg: 'Password cannot be empty.'
+            },
+            isStrongPassword: {
+                msg: 'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.',
+                options: {
+                    minLength: 8,
+                    minLowercase: 1,
+                    minUppercase: 1,
+                    minNumbers: 1,
+                    minSymbols: 1,
+                }
+            }
+        }
     },
-
     isAdmin: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
     }
-})
+});
 
 // services model
 const Service = sequelize.define("Service", {
@@ -60,18 +103,44 @@ const Service = sequelize.define("Service", {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: true,
+        validate: {
+            notNull: {
+                msg: 'Service name cannot be empty.'
+            },
+            notEmpty: {
+                msg: 'Service name cannot be empty.'
+            }
+        }
     },
-
     description: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notNull: {
+                msg: 'Description cannot be empty.'
+            },
+            notEmpty: {
+                msg: 'Description cannot be empty.'
+            }
+        }
     },
     price: {
         type: DataTypes.FLOAT,
-        allowNull: false
+        allowNull: false,
+        validate: {
+            notNull: {
+                msg: 'Price cannot be empty.'
+            },
+            notEmpty: {
+                msg: 'Price cannot be empty.'
+            },
+            isFloat: {
+                msg: 'Price must be a valid floating-point number.'
+            }
+        }
     }
-})
+});
 
 // blog model
 const Blog = sequelize.define("Blog", {
@@ -83,17 +152,33 @@ const Blog = sequelize.define("Blog", {
     title: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notNull: {
+                msg: 'Title cannot be empty.'
+            },
+            notEmpty: {
+                msg: 'Title cannot be empty.'
+            }
+        }
     },
     content: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notNull: {
+                msg: 'Content cannot be empty.'
+            },
+            notEmpty: {
+                msg: 'Content cannot be empty.'
+            }
+        }
     },
     image: {
-        
         type: DataTypes.STRING
+        // You can add validation for image if needed
     }
-    
-})
+});
+
 
 // feedback model
 const Feedback = sequelize.define("Feedback", {
@@ -105,9 +190,16 @@ const Feedback = sequelize.define("Feedback", {
     content: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+            notNull: {
+                msg: 'Content cannot be empty.'
+            },
+            notEmpty: {
+                msg: 'Content cannot be empty.'
+            }
+        }
     }
-    
-})
+});
 
 // establish relationship between user and feedback
 User.hasOne(Feedback)

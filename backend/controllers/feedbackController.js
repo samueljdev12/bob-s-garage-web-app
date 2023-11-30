@@ -20,7 +20,7 @@ const addFeedback = async (req, res) => {
   } catch (error) {
     console.log(error);
     // send error back
-    res.status(500).json("An error occured while creatinf feedback");
+    res.status(500).json("An error occured while Adding feedback feedback");
   }
 };
 
@@ -31,22 +31,20 @@ const getAllFeedback = async (req, res) => {
       include: User,
     });
 
-    res.send(feedbacks);
+    res.status(200).json(feedbacks);
   } catch (error) {
-    res.send(error);
+    res.status(500).json("An error occured while getting feedbacks try again!!");
   }
 };
 
 // get one feed back
 const getFeedback = async (req, res) => {
   try {
-    let feedId = req.params.feedId;
+    let feedId = req.params.id;
     const feedback = await Feedback.findOne({ where: { feedId: feedId } });
-    console.log(typeof feedId);
-    console.log(feedId);
-    res.send(feedback);
+    res.status(200).json(feedback);
   } catch (error) {
-    console.log(error);
+    res.status(500).json("A server error occured")
   }
 };
 
@@ -54,12 +52,17 @@ const getFeedback = async (req, res) => {
 const editFeedback = async (req, res) => {
   let id = req.params.id;
   id = parseInt(id)
+
   const { content, UserUserId } = req.body;
   try {
-    const feedback = await Feedback.update({content, UserUserId}, {where: {feedId: id}});
-    res.status(200).json(feedback)
+    const [rowCount, feedback] = await Feedback.update({content, UserUserId}, {where: {feedId: id}});
+    if(rowCount === 0){
+      return res.status(400).json("Feedback not found");
+    }
+    const feed = await Feedback.findByPk(id);
+    res.status(200).json(feed)
   } catch (error) {
-    res.status(500).json(error)
+    res.status(500).json("An error occured while updatinf feeedback")
   }
 
 };
@@ -71,9 +74,9 @@ const deleteFeedback = async (req, res) => {
     console.log(id)
     try {
         const feedback = await Feedback.destroy({where: {feedId: id}})
-        res.status(200).json(feedback)
+        res.status(200).json(id)
     } catch (error) {
-        res.status(500).json(error)
+        res.status(500).json("An error occured while deleting feedback")
     }
   
 };

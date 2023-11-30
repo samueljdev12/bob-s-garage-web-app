@@ -19,9 +19,10 @@ const signup = async (req, res) => {
     const { firstName, lastName, email, password } = req.body;
     // check if user exists
     const user = await User.findOne({ where: { email: email } });
+    console.log(user)
     // send message back if user exists
     if (user) {
-      return res.status(400).json({ errors: [{ msg: "User already exists" }] });
+      return res.status(400).json("User already exists");
     }
 
     // create a new user object
@@ -71,7 +72,7 @@ const signup = async (req, res) => {
       }
     );
   } catch (error) {
-    res.status(500).json({ errors: [{ msg: "Server Error" }] });
+    res.status(500).json("An server error occured try again!!");
   }
 };
 
@@ -85,14 +86,14 @@ const login = async (req, res) => {
 
     // check if user exists and send message when crenddentials are incorretc
     if (!user) {
-      return res.status(400).json({ errors: [{ msg: "Invalid Credentials in user" }] });
+      return res.status(400).json("Invalid Credentials");
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     // Send a message back if the password is incorrect.
     if (!isMatch) {
-      return res.status(400).json({ errors: [{ msg: "Invalid Credentials" }] });
+      return res.status(400).json("Invalid Credentials");
     }
 
     // create a payload
@@ -121,7 +122,7 @@ const login = async (req, res) => {
     );
   } catch (error) {
     // Send back an error message.
-    res.status(500).json({ errors: [{ msg: "Server Error" }] });
+    res.status(500).json("A Server Error occured try again!!");
   }
 };
 
@@ -133,12 +134,64 @@ const getUser = async(req, res) => {
     const user = await User.findByPk(req.user.userId, options);
     res.json(user);
   } catch (error) {
-    return res.status(500).json("Server Error");
+    return res.status(500).json("A Server Error occured try again");
   }
 }
+
+// update user
+// private must be logged in
+const updateUser = async (req, res) => {
+  try {
+    const { firstName, lastName, email } = req.body;
+
+    // Check if the user exists
+    const user = await User.findByPk(req.user.userId);
+    if (!user) {
+      return res.status(404).json('User does no exist');
+    }
+
+    // Update user details
+    user.firstName = firstName || user.firstName;
+    user.lastName = lastName || user.lastName;
+    user.email = email || user.email;
+
+    // Save the updated user
+    await user.save();
+
+    // Respond with the updated user (excluding password)
+    const options = { attributes: { exclude: ['password'] } };
+    const updatedUser = await User.findByPk(req.user.userId, options);
+
+    res.json(updatedUser);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json('A Server Error occure try again!!');
+  }
+};
+//get all users
+const getAllUsers = async (req, res) =>{
+  const options = { attributes: {exclude: ['password']}};
+  try {
+    const users =  await User.findAll(options);
+     res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json("A server error occured while getting users");
+  }
+}
+
+ // delete a user
+// const deleteUser = async(req, res => {
+
+// })
+
+
+
 
 module.exports = {
   signup,
   login,
-  getUser
+  getUser,
+  updateUser,
+  getAllUsers
 };
+

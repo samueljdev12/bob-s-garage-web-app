@@ -1,21 +1,42 @@
 import React, { useState } from 'react';
 import { FiTrash } from 'react-icons/fi';
 import {useSelector, useDispatch} from "react-redux";
-import { selectAllFeedbacks, deleteFeeback } from '../../../../reducers/FeedbackSlice';
-import { Link } from 'react-router-dom';
+import { selectAllFeedbacks, deleteFeed } from '../../../../reducers/FeedbackSlice';
 import { isAuth } from '../../../../reducers/authSlice';
+// unwrap for dispatch
+import { unwrapResult } from '@reduxjs/toolkit';
+
 const FeedbackList = () => {
+
+  // varibales
   const feedbacks = useSelector(selectAllFeedbacks);
   const isAuthenticated = useSelector(isAuth);
   const isAdmin = localStorage.getItem("isAdmin")
-  // Dummy data for illustration
   const dispatch = useDispatch();
  
-
-  const handleDelete = (id) => {
+  // handle delete
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this Feedback?');
     // Add logic to handle feedback deletion
-     dispatch(deleteFeeback({id}))
-    console.log(`Delete feedback with ID: ${id}`);
+     if(confirmDelete){
+      try {
+      const resultAction = await dispatch(deleteFeed({id}));
+      
+      // Use unwrapResult to extract the fulfilled value
+      const originalPromiseResult = unwrapResult(resultAction);
+      
+        if(originalPromiseResult){
+          alert("Feedback was delete successfully")
+        }
+      
+      } catch (error) {
+        // Handle the error here
+       
+       alert(error.message);
+      }
+      
+     }
+    
   };
 
 //  incase of unathorized user
@@ -36,7 +57,7 @@ const FeedbackList = () => {
       <div className="container-error px-3 m-4">
       <div className="row">
       <div className="alert alert-info" role="alert">
-        An error occured while fetching post, refresh page and try again
+         No Feedbacks
       </div>
       </div>
       </div>

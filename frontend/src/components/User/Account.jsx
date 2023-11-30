@@ -45,6 +45,9 @@ const Account = () => {
               <span className="info-label">Email:</span>
               <span className="info-value">{userData.email}</span>
             </div>
+            <div className="text-center">
+                <Link to="/user/edit" className="btn btn-outline-primary ">Edit</Link>
+            </div>
           </div>
            {userFeed !== undefined  &&(<div className="text-center m-3">
               <h4>Your feedback</h4>

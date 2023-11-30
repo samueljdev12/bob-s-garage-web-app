@@ -2,18 +2,23 @@ import { useState } from "react";
 import { FiEdit, FiAlignLeft, FiDollarSign } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import { editService, selectService} from "../../../../reducers/ServiceSlice";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {useNavigate, useParams } from "react-router-dom";
+import PopUp from "../../layouts/PopUp";
+import {showPopup} from "../../../utils/ShowPoup";
+// unwrap for dispatch
+import { unwrapResult } from '@reduxjs/toolkit';
+
 
 const EditService = () => {
+  //variables
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [requestStatus, setRequestStatus] = useState("idle");
   let {id} = useParams();
   id = parseInt(id);
 
   const service = useSelector((state) => selectService(state, id))
-  console.log(service)
 
+// form data state
   const [formData, setFormData] = useState({
     name: service?.name || "",
     description: service?.description || "",
@@ -21,6 +26,7 @@ const EditService = () => {
     serviceId: service?.serviceId || 0
   });
 
+  // form chnage handler
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -29,71 +35,37 @@ const EditService = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  // submit handler
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add logic to handle service submission
-    console.log("Form data:", formData);
     try {
-      dispatch(editService(formData));
-      setRequestStatus("success");
-      showPopup()
-    } catch (error) {
-      setRequestStatus("failed");
+      
+      const resultAction = await dispatch(editService(formData));
+      
+      // Use unwrapResult to extract the fulfilled value
+      const originalPromiseResult = unwrapResult(resultAction);
+      if(originalPromiseResult){
+       console.log("After submit")
+      
+        // calling showpopu
+        showPopup("success", "/admin/services", navigate, {
+          title: "Success",
+          body: " Added with success",
+          footer: "You will be redirected in 3 seconds.."
+        });
+      }
+    } catch (rejectedValueOrSerializedError) {
+      const errorMessage = rejectedValueOrSerializedError.message || 'An error occurred';
+      alert(errorMessage);
     }
   };
 
   // show popup
-  function showPopup() {
-    var myModal = new bootstrap.Modal(document.getElementById("exampleModal1"));
-    myModal.show();
-  }
+ 
 
   return (
-    // modal
-    <div className="container py-5">
-      <button
-        type="button"
-        className="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#exampleModal1"
-        style={{ display: "none" }}
-      >
-        Open Popup
-      </button>
-
-      <div
-        className="modal fade"
-        id="exampleModal1"
-        tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalLabel">
-                Popup Title
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body">Service updated with success.</div>
-            <div className="modal-footer">
-              <button
-                
-                className="btn btn-primary"
-                data-bs-dismiss="modal"
-              >
-                OK
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div>
+      <PopUp/>
       {/* main conten */}
       <div className="row justify-content-center">
         <div className="col-md-8">

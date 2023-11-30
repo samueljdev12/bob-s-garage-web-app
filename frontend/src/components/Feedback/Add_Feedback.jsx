@@ -4,18 +4,28 @@ import { isAuth, getAuthUser } from "../../../reducers/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { addFeedabck } from '../../../reducers/FeedbackSlice';
 import { useNavigate } from 'react-router-dom';
+import PopUp from '../layouts/PopUp';
+import { showPopup } from '../../utils/ShowPoup';
+// unwrap for dispatch
+import { unwrapResult } from '@reduxjs/toolkit';
+
+
+
 const AddFeedback = () => {
+
+  // variables
   const isAuthenticated = useSelector(isAuth);
   const user = useSelector(getAuthUser)
   const dispatch = useDispatch();
-  const navaigate = useNavigate();
+  const navigate = useNavigate();
+
+  // form data state
   const [formData, setFormData] = useState({
     content: '',
     UserUserId: user.userId
   });
 
-  const [requestStatus, setRequestStatus] = useState("idle");
-
+  // handle form change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -24,22 +34,31 @@ const AddFeedback = () => {
     });
   };
 
-  console.log(`The userid is ${formData.UserUserId} and type is ${typeof(formData.UserUserId)}`)
-  const handleSubmit = (e) => {
+// submit handler
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    setRequestStatus("loading")
     // Add logic to handle post submission
     try {
-      dispatch(addFeedabck(formData))
-    } catch (error) {
-      setRequestStatus("error")
-    }finally{
-      setRequestStatus("idle")
+      const resultAction = await dispatch(addFeedabck(formData));
+      
+      // Use unwrapResult to extract the fulfilled value
+      const originalPromiseResult = unwrapResult(resultAction);
+        if(originalPromiseResult){
+          showPopup("success", "/customer-account", navigate, {
+            title: "Success",
+            body: " Added with success",
+            footer: "You will be redirected in 3 seconds.."
+          });
+        }
+    } catch (rejectedValueOrSerializedError){
+      const errorMessage = rejectedValueOrSerializedError.message || 'An error occurred';
+      alert(errorMessage);
     }
-    // Add logic to handle feedback submission
-    console.log('Form data:', formData);
   };
 
+  //logic end
+
+  // return this if user is not authenticated
   if(!isAuthenticated){
     return(
       <div className="container-error px-3">
@@ -51,9 +70,11 @@ const AddFeedback = () => {
       </div>
     )
   }
+
   
   return (
     <div className="container py-5">
+      <PopUp/>
       <div className="row justify-content-center">
         <div className="col-md-8">
           <h2 className="mb-4">Add Feedback</h2>

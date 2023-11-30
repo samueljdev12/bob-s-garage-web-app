@@ -1,23 +1,26 @@
 import { useState } from 'react';
 import { FiEdit, FiLink, FiFileText } from 'react-icons/fi';
 import {useSelector, useDispatch} from "react-redux";
-import { editPost, selectStatus, selectPost } from '../../../../reducers/BlogReducer';
-import { useNavigate, useParams , Link} from 'react-router-dom';
+import { editPost, selectPost } from '../../../../reducers/BlogReducer';
+import { useNavigate, useParams } from 'react-router-dom';
 import { isAuth } from '../../../../reducers/authSlice';
+import PopUp from '../../layouts/PopUp';
+import { showPopup } from '../../../utils/ShowPoup';
+// unwrap for dispatch
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const EditPost = () => {
   // variables
   const {id} = useParams();
   const postId = parseInt(id);
   const dispatch = useDispatch();
-  const navaigate = useNavigate();
-  const status = useSelector(selectStatus);
-  const [requestStaus, setRequestStatus] = useState(status);
+  const navigate = useNavigate();
   const post = useSelector((state) => selectPost(state, postId))
   const isAuthenticated = useSelector(isAuth);
   const isAdmin = localStorage.getItem("isAdmin")
 
 
+  // states
   const [formData, setFormData] = useState({
     postId: postId,
     title: post?.title || '',
@@ -25,6 +28,7 @@ const EditPost = () => {
     image: post?.image || '',
   });
 
+  // onchange handler
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -34,19 +38,27 @@ const EditPost = () => {
   };
 
 
-  const handleSubmit = (e) => {
+  // submit handler
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setRequestStatus("loading")
     // Add logic to handle post submission
     try {
-      dispatch(editPost(formData))
-      navaigate("/admin/posts")
-    } catch (error) {
-      setRequestStatus("error")
-    }finally{
-      setRequestStatus("idle")
+
+      const resultAction = await dispatch(editPost(formData));
+      const originalPromiseResult = unwrapResult(resultAction);
+    // Use unwrapResult to extract the fulfilled value
+       if(originalPromiseResult){
+        // calling showpopu
+      showPopup("success", "/admin/posts", navigate, {
+        title: "Success",
+        body: " Update with success",
+        footer: "You will be redirected in 3 seconds.."
+      });
+       }
+    } catch (rejectedValueOrSerializedError) {
+      const errorMessage = rejectedValueOrSerializedError.message || 'An error occurred';
+      alert(errorMessage);
     }
-    console.log('Form data:', formData);
   }
 
   if(!isAuthenticated || isAdmin != "true"){
@@ -61,24 +73,11 @@ const EditPost = () => {
     )
   }
   
-  const {title} = formData;
-  if(title === ''){
-    return(
-        <div className="container-error px-3">
-        <div className='text-center'>
-            <Link to="/admin/add_post" className='p-5'>&#60; &#x3C; &lt;tBack</Link>
-        </div>
-      <div className="row">
-      <div className="alert alert-info" role="alert">
-        Post not found try again
-      </div>
-      </div>
-      </div>
-    )
-  }
+ 
 
   return (
     <div className="container py-5">
+      <PopUp/>
       <div className="row justify-content-center">
         <div className="col-md-8">
           <h2 className="mb-4">Add Post</h2>

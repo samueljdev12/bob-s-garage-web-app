@@ -1,20 +1,38 @@
 import { FiTrash, FiEdit } from 'react-icons/fi';
 import {useSelector, useDispatch} from "react-redux";
 import { getAllServices, deleteService} from '../../../../reducers/ServiceSlice';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { showPopup } from '../../../utils/ShowPoup';
+import PopUp from '../../layouts/PopUp';
+// unwrap for dispatch
+import { unwrapResult } from '@reduxjs/toolkit';
 
 const ServiceList = () => {
+
+  // variables
   const dispactch = useDispatch();
   const services = useSelector(getAllServices);
-  console.log(services)
+  const navigate = useNavigate()
 
-  const handleDelete = (id) => {
+
+  const handleDelete = async (id) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this Service?');
     if(confirmDelete){
-      dispactch(deleteService({id}))
+      try {
+      const resultAction = await dispactch(deleteService({id}));
+      
+      // Use unwrapResult to extract the fulfilled value
+      const originalPromiseResult = unwrapResult(resultAction);
+      if(originalPromiseResult){
+         alert("Service was deleted succesfully");
+        }
+
+      } catch (rejectedValueOrSerializedError) {
+        const errorMessage = rejectedValueOrSerializedError.message || 'An error occurred';
+        alert(errorMessage);
+      }
+      
     }
-    // Add logic to handle service deletion
-    console.log(`Delete service with ID: ${id}`);
   };
 
 
@@ -27,7 +45,7 @@ const ServiceList = () => {
         </div>
       <div className="row">
       <div className="alert alert-info" role="alert">
-        An error occured while fetching services, refresh page and try again
+         No service 
       </div>
       </div>
       </div>
@@ -36,6 +54,7 @@ const ServiceList = () => {
 
   return (
     <div className="container py-5">
+      <PopUp/>
         <div className='text-center'>
             <Link to="/admin/add_service" className='btn btn-outline-primary m-3'>Add Service</Link>
         </div>

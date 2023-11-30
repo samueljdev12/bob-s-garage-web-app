@@ -6,8 +6,7 @@ import setAuthToken from "../src/utils/setToken";
 // state
 const initialState = {
     services: [],
-    status: "idle",
-    error: false
+    status: "idle"
 }
 
 // get all services
@@ -18,7 +17,7 @@ export const getServices = createAsyncThunk("services/all", async() =>{
     console.log(res.data)
     return res.data
     } catch (err) {
-        return err.message;
+        throw err.response.data;
     }
     
 })
@@ -31,7 +30,7 @@ export const addServices = createAsyncThunk("services/add", async(formData) =>{
          const res = await axios.post(`${baseUrl}/new`, formData);
          return res.data
     } catch (err) {
-        return err.message
+        throw err.response.data;
     }
 })
 
@@ -42,7 +41,7 @@ export const deleteService = createAsyncThunk("services/delete", async({id}) =>{
         const res = await axios.delete(`${baseUrl}/delete/${id}`);
         return res.data;
     } catch (err) {
-        return err.message
+        throw err.response.data;
     }
 })
 
@@ -55,7 +54,7 @@ export const editService = createAsyncThunk("/services/edit", async(formData) =>
         const res = await axios.put(`${baseUrl}/edit/${id}`, formData);
         return res.data;
     } catch (err) {
-        return err.message
+        throw err.response.data;
     }
 })
 
@@ -72,25 +71,22 @@ const serviceSlice = createSlice({
             state.status = "loading"
         })
         .addCase(getServices.fulfilled, (state, action) =>{
-            state.status = "idle"
+            state.status = "success"
             state.services = action.payload
         })
 
-        .addCase(getServices.rejected, (state, action) =>{
-            state.status = "idle",
-            state.error = action.error.message
-            state.services = []
+        .addCase(getServices.rejected, (state) =>{
+            state.status = "failed"
         })
         .addCase(addServices.pending, (state) =>{
             state.status = "idle"
         })
         .addCase(addServices.fulfilled, (state, action) =>{
             state.status = "success"
-            state.services = state.services.push(action.payload)
+            state.services = [...state.services, action.payload]
         })
         .addCase(addServices.rejected, (state) =>{
             state.status = "error"
-            state.error = true
         })
         .addCase(editService.pending, (state) =>{
             state.status = 'idle'
@@ -99,7 +95,7 @@ const serviceSlice = createSlice({
             const updatedService = action.payload;
     
             // Find the index of the post to be updated
-            const index = state.services.findIndex((feedback) => feedback.feedId === updatedService);
+            const index = state.services.findIndex((service) => service.serviceId === updatedService.serviceId);
     
             if (index !== -1) {
               // If the post is found, update it
@@ -109,13 +105,14 @@ const serviceSlice = createSlice({
         })
         .addCase(editService.rejected, (state) =>{
             state.status = "failed"
-            state.error = true
         })
         .addCase(deleteService.pending, (state) =>{
             state.status = "loading"
         })
-        .addCase(deleteService.fulfilled, (state) =>{
-            state.status = "success"
+        .addCase(deleteService.fulfilled, (state, action) =>{
+            state.status = "success" 
+            const deleteId = action.payload
+            state.services = state.services.filter((service) => service.serviceId !== deleteId)
         })
         .addCase(deleteService.rejected, (state) =>{
             state.status = "failed"
