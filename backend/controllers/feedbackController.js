@@ -5,12 +5,19 @@ const db = require("../models");
 // Destructure models
 const { Feedback, User } = db.sequelize.models;
 
+const {feedbackSchema} = require("../utilities/validate")
+
 const addFeedback = async (req, res) => {
+  const { content, UserUserId } = req.body;
   try {
+    //validate data here
+    const { error, value } = feedbackSchema.validate(req.body, { abortEarly: true });
+    if (error) {
+      return res.status(400).json(error.details[0].message);
+    }
     // get form data
-    const { content, UserUserId } = req.body;
-    // const feedback = await Feedback.findOne({ where: { feedId: feedId } });
-    // get user id
+  
+
     const createdFeedback = await Feedback.create({
       content,
       UserUserId,
@@ -27,6 +34,7 @@ const addFeedback = async (req, res) => {
 // get all feedbacks
 const getAllFeedback = async (req, res) => {
   try {
+  
     const feedbacks = await Feedback.findAll({
       include: User,
     });
@@ -53,8 +61,16 @@ const editFeedback = async (req, res) => {
   let id = req.params.id;
   id = parseInt(id)
 
-  const { content, UserUserId } = req.body;
   try {
+    //validate data here
+    const { error, value } = feedbackSchema.validate(req.body, { abortEarly: true });
+    if (error) {
+      return res.status(400).json(error.details[0].message);
+    }
+
+    const { content, UserUserId } = req.body;
+  
+
     const [rowCount, feedback] = await Feedback.update({content, UserUserId}, {where: {feedId: id}});
     if(rowCount === 0){
       return res.status(400).json("Feedback not found");

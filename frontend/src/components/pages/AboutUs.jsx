@@ -3,7 +3,7 @@ import React from 'react';
 const AboutUs = () => {
   return (
     <div className="my-2 text-md-center">
-      <div className="p-md-5">
+      <div className="p-md-5 p-3">
         
           <h2 className="text-center mb-4">About Bob's Garage</h2>
           <p>
@@ -12,7 +12,7 @@ const AboutUs = () => {
             maintenance services.
           </p>
 
-          <h3 className="text-center ">Our Commitment to Quality</h3>
+          <h3 className="text-md-center ">Our Commitment to Quality</h3>
           <p>
             At Bobs Garage, we are committed to delivering the highest quality service. Our team of experienced and
             certified mechanics is passionate about cars and dedicated to ensuring your vehicle runs smoothly.

@@ -1,3 +1,39 @@
+/* theme */
+
+/* styles.css */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition for dark/light mode */
+  font-size: 1rem;
+}
+
+.light {
+  background-color: #ffffff;
+  color: #333333;
+}
+
+.dark {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+
+.button:hover {
+  background-color: #2980b9;
+}
+
+body.dark .card {
+  background-color: #ffffff ; /* Dark gray */
+  border: 1px solid #333333;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Add more styles as needed */
+
+
+
+/* theme end */
 .wrapper {
   max-width: 1280px;
   margin: 0 auto;
@@ -7,31 +43,28 @@
 .container-error{
   height: 60vh;
 }
-.absoulte-div{
-  position: fixed;
-   bottom: 30%;
-  right: 10px;
-  background-color: #ffff;
-  width: 18%;
-  
+
+.custom-border{
+  border: solid;
+   border-color: #dddddd;
 }
+
+
+
 @media (max-width: 768px) {
   /* Your CSS styles go here */
   .wrapper{
     padding: 0;
+  
   }
 
-  .absoulte-div{
-    
-    bottom: 0;
-    right: 0;
-    background-color: #ffff;
-    width: 100%;
-    z-index: 5;
+  .custom-border{
+    border: none;
   }
   
   /* Add more styles as needed */
 }
+
 
 
 ul {

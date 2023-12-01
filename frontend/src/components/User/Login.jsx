@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
 import { useDispatch} from 'react-redux';
 import { loginAsync, getUser } from '../../../reducers/authSlice';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 // unwrap for dispatch
 import { unwrapResult } from '@reduxjs/toolkit';
+import Error from "../layouts/Error";
+import { showContainerError } from "../../utils/showError";
 
 const Login = () => {
 
@@ -62,7 +64,7 @@ const Login = () => {
       } catch (rejectedValueOrSerializedError) {
         // Handle the error here
         const errorMessage = rejectedValueOrSerializedError.message || 'An error occurred';
-        alert(errorMessage);
+         showContainerError(errorMessage);
       }
     }
   };
@@ -75,15 +77,6 @@ const Login = () => {
     return emailRegex.test(email);
   };
 
-   if(status === "failed"){
-    return (<div className="container-error px-3">
-    <div className="row">
-    <div className="alert alert-danger" role="alert">
-       An error occured try again! use correct login details
-    </div>
-    </div>
-    </div>)
-   }
 
   return (
     <div className="container py-5">
@@ -91,10 +84,11 @@ const Login = () => {
         <div className="col-md-6">
           <h2 className="mt-4">Login</h2>
           <p className="mt-3">
-              Don't have an account? <a href="/register">Register</a>
-            </p>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
+              Don't have an account? <Link to="/register">Register</Link>
+          </p>
+          <Error/>
+          <form onSubmit={handleSubmit} className='border rounded  p-5'>
+            <div className="mb-4">
               <label htmlFor="email" className="form-label">
                 <FiMail />
                 Email
@@ -110,7 +104,7 @@ const Login = () => {
               />
               {errors.email && <div className="invalid-feedback">{errors.email}</div>}
             </div>
-            <div className="mb-3">
+            <div className="mb-4">
               <label htmlFor="password" className="form-label">
                 <FiLock />
                 Password
@@ -125,11 +119,13 @@ const Login = () => {
                 required
               />
             </div>
+            <div className='text-center'>
             <button type="submit" className="btn btn-primary">
               Login <FiLogIn />
             </button>
+            </div>
             <p className="mt-3">
-              Don't have an account? <a href="/register">Register</a>
+              Don't have an account? <Link to="/register">Register</Link>
             </p>
           </form>
         </div>

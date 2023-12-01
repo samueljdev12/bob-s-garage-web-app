@@ -23,32 +23,27 @@ import Header from './components/Admin/layouts/Header';
 import EditPost from './components/Admin/Blog/EditPost';
 import EditFeedback from './components/Feedback/EditFeedback';
 import EditService from './components/Admin/Services/EditSerrvices';
-
-// themes
-import { ThemeConsumer, ThemeProvider } from 'styled-components';
-import { GlobalStyles } from './components/theme/globalStyles';
-import { lightTheme, darkTheme } from './components/theme/Theme';
-import { useState, useEffect } from 'react';
-import { useDarkMode } from './components/theme/UserDarkMode';
 import EditProfile from './components/User/EditProfile';
+
+
+//themes
+import { toggleTheme, selectTheme } from '../reducers/ThemeSlice';
+import {useSelector, useDispatch} from "react-redux";
+import NotFound from './components/pages/NotFound';
+
 
 
 function App() {
 
 const isAdmin = localStorage.getItem("isAdmin");
-const [theme, themeToggler, mountedComponent] = useDarkMode();
-const themeMode = theme === 'light' ? lightTheme : darkTheme;
-
-if(!mountedComponent) return <div/>
+const theme = useSelector(selectTheme);
 
   return (
     <Router>
-      <ThemeProvider theme={themeMode}>
-
-      <button onClick={themeToggler}>Switch Theme</button>
 
       {isAdmin  === "true" ? <Header/> : <Nav/>}
-      <GlobalStyles/>
+      {/* <GlobalStyles/> */}
+    <div className={`App ${theme}`}>
       <div className='wrapper'>
       <Routes>
          <Route path='/about_us' element={<AboutUs/>}></Route>
@@ -74,10 +69,14 @@ if(!mountedComponent) return <div/>
           <Route path='/admin/services' element={<ServiceList/>}></Route>
           <Route path='/admin/post/edit/:id' element={<EditPost/>}></Route>
           <Route path='/admin/services/service/edit/:id' element={<EditService/>}></Route>
+
+          {/* Not found */}
+          <Route path="*" element={<NotFound/>} />
       </Routes>
       </div>
+      </div>
       <Footer/>
-      </ThemeProvider>
+
     </Router>
   )
 }

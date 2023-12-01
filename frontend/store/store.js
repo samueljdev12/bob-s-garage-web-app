@@ -4,6 +4,8 @@ import authReducer from "../reducers/authSlice";
 import blogReducer from "../reducers/BlogReducer";
 import feedbacksReducer from "../reducers/FeedbackSlice";
 import serviceReducer from "../reducers/ServiceSlice";
+import themeRedcuer from "../reducers/ThemeSlice"
+import ThemeSlice from "../reducers/ThemeSlice";
 
 
 export const store = configureStore({
@@ -13,6 +15,7 @@ export const store = configureStore({
         blog: blogReducer,
         feedbacks: feedbacksReducer,
         services: serviceReducer,
+        theme: themeRedcuer
         
 
 

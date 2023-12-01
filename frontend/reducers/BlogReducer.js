@@ -34,9 +34,14 @@ export const addPost = createAsyncThunk("blog/add", async(FormData) =>{
 // update post
 export const editPost = createAsyncThunk("blog/edit", async(FormData) =>{
     const id = FormData.postId;
+    const formdata = {
+        title: FormData.title,
+        content: FormData.content,
+        image: FormData.image
+    }
     try {
         setAuthToken(localStorage.token)
-        const res = await axios.put(`${baseUrl}/edit/${id}`, FormData);
+        const res = await axios.put(`${baseUrl}/edit/${id}`, formdata);
         return res.data
     } catch (err) {
         throw err.response.data;

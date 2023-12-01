@@ -8,6 +8,8 @@ import PopUp from '../../layouts/PopUp';
 import { showPopup } from '../../../utils/ShowPoup';
 // unwrap for dispatch
 import { unwrapResult } from '@reduxjs/toolkit';
+import Error from '../../layouts/Error';
+import { showContainerError } from '../../../utils/showError';
 
 const EditPost = () => {
   // variables
@@ -57,7 +59,7 @@ const EditPost = () => {
        }
     } catch (rejectedValueOrSerializedError) {
       const errorMessage = rejectedValueOrSerializedError.message || 'An error occurred';
-      alert(errorMessage);
+      showContainerError(errorMessage);
     }
   }
 
@@ -80,7 +82,8 @@ const EditPost = () => {
       <PopUp/>
       <div className="row justify-content-center">
         <div className="col-md-8">
-          <h2 className="mb-4">Add Post</h2>
+          <h2 className="mb-4">Edit Post</h2>
+          <Error/>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="title" className="form-label">

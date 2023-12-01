@@ -20,6 +20,11 @@ const Feedback = () => {
   return (
     <div className="container p-md-5">
       <h2 className="mt-4">Testimonials</h2>
+      <div className="description-div bg-light p-3 mb-4 rounded ">
+        <p className="text-dark">
+        This is a list of user feedback. Below are testimonials from users who have shared their thoughts and experiences.
+        </p>
+      </div>
       <div className="row">
         {feedbacks.map((feedback) => (
           <div className="col-md-12 lead " key={feedback.feedId}>
@@ -34,10 +39,6 @@ const Feedback = () => {
             </div>
           </div>
         ))}
-        <div className="absoulte-div border bg-secondary text-light text-center">
-          <p>Your Feedback is import to us</p>
-          <p>Levae us a feeback here</p>
-        </div>
       </div>
     </div>
   );

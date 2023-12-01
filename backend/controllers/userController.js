@@ -1,3 +1,6 @@
+//this is the user controller and has all endpoints functions for users.
+//author -Jonah Samuel
+
 // Bring in Bcrypt
 const bcrypt = require("bcrypt");
 
@@ -13,17 +16,32 @@ const config = require("../config/config");
 // Destructure models
 const { User } = db.sequelize.models;
 
+// validation
+const { signupSchema, updateUserSchema } = require('../utilities/validate');
+
 // register user
 const signup = async (req, res) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+
+
+    //vaidate the data
+    const {error, value} = signupSchema.validate(req.body, { abortEarly: true });
+    if (error) {
+      return res.status(400).json(error.details[0].message);
+    }
+
+    //continue if valid
+   const { firstName, lastName, email, password } = req.body;
+
     // check if user exists
     const user = await User.findOne({ where: { email: email } });
-    console.log(user)
+   
     // send message back if user exists
     if (user) {
       return res.status(400).json("User already exists");
     }
+
+      
 
     // create a new user object
     const newUser = {
@@ -33,6 +51,8 @@ const signup = async (req, res) => {
       password,
       isAdmin: false,
     };
+
+    console.log(newUser)
 
     // has password
     const salt = await bcrypt.genSalt(10);
@@ -81,8 +101,10 @@ const login = async (req, res) => {
   try {
     // geting information from post body
     const { email, password } = req.body;
+
+
     // find user in databse
-    let user = await User.findOne({ where: { email: email } });
+    const user = await User.findOne({ where: { email: email } });
 
     // check if user exists and send message when crenddentials are incorretc
     if (!user) {
@@ -142,7 +164,14 @@ const getUser = async(req, res) => {
 // private must be logged in
 const updateUser = async (req, res) => {
   try {
+    //validate data
+    const {error, value} = updateUserSchema.validate(req.body, { abortEarly: true });
+    if (error) {
+      return res.status(400).json(error.details[0].message);
+    }
+
     const { firstName, lastName, email } = req.body;
+
 
     // Check if the user exists
     const user = await User.findByPk(req.user.userId);

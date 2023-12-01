@@ -39,10 +39,13 @@ export const editFeedback = createAsyncThunk(
   "feedbacks/edit",
   async (formData) => {
     const id = formData.feedId;
-    console.log(`id in editreducer is ${id}`);
+    const formdata = {
+      content: formData.content,
+      UserUserId: formData.UserUserId
+    }
     try {
       setAuthToken(localStorage.token);
-      const res = await axios.put(`${baseUrl}/edit/${id}`, formData);
+      const res = await axios.put(`${baseUrl}/edit/${id}`, formdata);
       return res.data;
     } catch (err) {
       throw err.response.data;

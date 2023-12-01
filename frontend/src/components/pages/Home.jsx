@@ -27,7 +27,7 @@ const Home = () => {
             experienced and certified mechanics are passionate about cars and committed to ensuring your vehicle runs
             smoothly.
           </p>
-          <Link to="/about" className="btn btn-primary border-5 rounded ">
+          <Link to="/about_us" className="btn btn-outline-light border-5 rounded ">
             Learn More<FiInfo className='mx-1'></FiInfo>
           </Link>
         </div>

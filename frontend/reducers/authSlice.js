@@ -27,6 +27,7 @@ export const getUser = createAsyncThunk("auth/user", async () => {
     setAuthToken(localStorage.token);
     const res = await axios.get(`${baseUrl}/user`);
     localStorage.setItem("isAdmin", res.data.isAdmin);
+    localStorage.setItem("userId", res.data.userId)
     return res.data;
   } catch (err) {
     throw err.response.data;
@@ -59,6 +60,7 @@ const authSlice = createSlice({
     logout: (state) => {
       localStorage.removeItem("token");
       localStorage.removeItem("isAdmin");
+      localStorage.removeItem("userId");
       state.isAuth = false;
     },
     resetError: (state) => {

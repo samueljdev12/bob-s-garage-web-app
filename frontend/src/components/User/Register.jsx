@@ -2,8 +2,10 @@ import { FiUser, FiMail, FiLock, FiUserPlus } from 'react-icons/fi';
 import { useDispatch } from "react-redux";
 import { register} from '../../../reducers/authSlice';
 import { useState } from 'react';
-import {Link} from "react-router-dom"
 import { unwrapResult } from '@reduxjs/toolkit';
+import {Link} from 'react-router-dom'
+import Error from "../layouts/Error";
+import { showContainerError } from "../../utils/showError";
 
 
 const Register = () => {
@@ -70,6 +72,14 @@ const Register = () => {
     });
   };
 
+ 
+  const data = {
+    firstName: formData.firstName,
+    lastName: formData.lastName,
+    email: formData.email,
+    password: formData.password,
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -80,7 +90,7 @@ const Register = () => {
       // Form is valid - you can handle registration or submission logic here
       try {
         // Dispatch the register action
-        const resultAction = await dispatch(register(formData));
+        const resultAction = await dispatch(register(data));
       
         // Use unwrapResult to extract the fulfilled value
         const originalPromiseResult = unwrapResult(resultAction);
@@ -100,7 +110,7 @@ const Register = () => {
         }
       
         // Show the error message in an alert
-        alert(errorMessage);
+        showContainerError(errorMessage);
       }
       
     }
@@ -112,11 +122,12 @@ const Register = () => {
     <div className="container py-5">
       <div className="row justify-content-center">
         <div className="col-md-6">
-        <p className="mt-3">
-              Don't have an account? <a href="/register">Register</a>
+        <p>
+           Already have an account <Link to="/login">Login</Link>
             </p>
           <h2 className="mt-4">Register</h2>
-          <form onSubmit={handleSubmit}>
+          <Error/>
+          <form onSubmit={handleSubmit} className='border rounded-2 p-3 mb-4 rounded'>
             <div className="mb-3">
               <label htmlFor="firstName" className="form-label">
                 <FiUser></FiUser> First Name
@@ -128,6 +139,7 @@ const Register = () => {
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleInputChange}
+                required
               />
               {errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
             </div>
@@ -142,6 +154,7 @@ const Register = () => {
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleInputChange}
+                required
               />
               {errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
             </div>
@@ -156,6 +169,7 @@ const Register = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
+                required
               />
               {errors.email && <div className="invalid-feedback">{errors.email}</div>}
             </div>
@@ -170,6 +184,7 @@ const Register = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
+                required
               />
               {errors.password && <div className="invalid-feedback">{errors.password}</div>}
             </div>
@@ -184,14 +199,17 @@ const Register = () => {
                 name="repeatPassword"
                 value={formData.repeatPassword}
                 onChange={handleInputChange}
+                required
               />
               {errors.repeatPassword && <div className="invalid-feedback">{errors.repeatPassword}</div>}
             </div>
+            <div className='text-center'>
             <button type="submit" className="btn btn-primary mx-auto">
               Register<FiUserPlus></FiUserPlus>
             </button>
+            </div>
             <p className="mt-3">
-              Don't have an account? <a href="/register">Register</a>
+              Already have an account <Link to="/login">Login</Link>
             </p>
           </form>
         </div>

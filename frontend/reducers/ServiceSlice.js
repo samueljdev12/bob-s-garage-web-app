@@ -48,10 +48,14 @@ export const deleteService = createAsyncThunk("services/delete", async({id}) =>{
 // edit services
 export const editService = createAsyncThunk("/services/edit", async(formData) =>{
     const id = formData.serviceId;
-    console.log(`slice id is ${id}`)
+    const formdata = {
+        name: formData.name,
+        description: formData.description,
+        price: formData.price
+    }
     try {
         setAuthToken(localStorage.token)
-        const res = await axios.put(`${baseUrl}/edit/${id}`, formData);
+        const res = await axios.put(`${baseUrl}/edit/${id}`, formdata);
         return res.data;
     } catch (err) {
         throw err.response.data;

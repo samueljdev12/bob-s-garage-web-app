@@ -7,12 +7,15 @@ import PopUp from '../../layouts/PopUp';
 // unwrap for dispatch
 import { unwrapResult } from '@reduxjs/toolkit';
 
+import { isAuth } from '../../../../reducers/authSlice';
+
 const ServiceList = () => {
 
   // variables
   const dispactch = useDispatch();
   const services = useSelector(getAllServices);
-  const navigate = useNavigate()
+  const isAuthenticated = useSelector(isAuth);
+  const isAdmin = localStorage.getItem("isAdmin")
 
 
   const handleDelete = async (id) => {
@@ -35,6 +38,19 @@ const ServiceList = () => {
     }
   };
 
+  // check for unathorized user
+  //  incase of unathorized user
+  if(!isAuthenticated || isAdmin != "true"){
+    return(
+      <div className="container-error px-3">
+      <div className="row">
+      <div className="alert alert-warning" role="alert">
+        You are not Authorized to access this page
+      </div>
+      </div>
+      </div>
+    )
+  }
 
 
   if(!Array.isArray(services) || services.length <= 0 ){
@@ -51,6 +67,8 @@ const ServiceList = () => {
       </div>
     )
   }
+
+
 
   return (
     <div className="container py-5">

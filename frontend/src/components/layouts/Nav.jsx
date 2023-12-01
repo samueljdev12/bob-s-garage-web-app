@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { isAuth, logout } from '../../../reducers/authSlice';
 import { useSelector, useDispatch } from 'react-redux';
+import { toggleTheme, selectTheme } from '../../../reducers/ThemeSlice';
 
 const Nav = () => {
+  const theme = useSelector(selectTheme);
   const isAuthentciated = useSelector(isAuth)
-  console.log(isAuthentciated)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = () =>{
@@ -12,6 +13,10 @@ const Nav = () => {
      navigate("/login")
      window.location.reload(true);
   }
+
+  const toggleDarkMode = () => {
+    dispatch(toggleTheme());
+  };
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-dark p-4">
       <div className="container">
@@ -34,20 +39,20 @@ const Nav = () => {
               <Link className="nav-link text-white" to="/testimonials">Testimonials</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-white" to="/faq">FAQ</Link>
+              <Link className="nav-link text-white" to="/blog">Blog</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-white" to="/blog">Blog</Link>
+              <Link className="nav-link text-white" to="/faq">FAQ</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link text-white" to="/privacy-policy">Privacy Policy</Link>
             </li>
             {isAuthentciated && (<li className="nav-item">
-              <Link className="nav-link text-white" to="/customer-account">My Account</Link>
+              <Link className="btn btn-outline-info mx-2 text-white" to="/customer-account">My Account</Link>
             </li>)}
             <li className="nav-item text-white">
               {isAuthentciated?  <button
-                  className="btn btn-danger btn-sm p-2 text-light "
+                  className="btn btn-outline-danger btn-sm p-2 text-light "
                   data-bs-toggle="modal"
                   data-bs-target="#exampleModal"
                 >
@@ -57,6 +62,12 @@ const Nav = () => {
             {!isAuthentciated && (<li className="nav-item text-white">
               <Link className="nav-link text-white" to="/register">Register</Link>
             </li>)}
+
+            <li>
+            <button className="btn btn-outline-light  mx-2" onClick={toggleDarkMode}>
+                   {theme === "light" ? "Dark" : "Light"} Mode
+            </button>
+            </li>
           </ul>
         </div>
       </div>

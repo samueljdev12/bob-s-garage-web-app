@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa';
+import { FaFacebook, FaTwitter, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 
@@ -15,23 +15,36 @@ const Footer = () => {
             <h5>Site Map</h5>
             <ul className="list-unstyled">
               <li>
-                <Link to="/">Home</Link>
+                <Link className='text-light' to="/">Home</Link>
               </li>
               <li>
-                <Link to="/about">About Us</Link>
+                <Link className='text-light' to="/about_us">About Us</Link>
               </li>
               <li>
-                <Link to="/services">Services</Link>
+                <Link className='text-light' to="/services">Services</Link>
               </li>
               <li>
-                <Link to="/contact">Contact</Link>
+                <Link className='text-light' to="/login">Login</Link>
               </li>
               <li>
-                <Link to="/login">Login</Link>
+                <Link className='text-light' to="/register">Register</Link>
               </li>
               <li>
-                <Link to="/register">Register</Link>
+                <Link className='text-light' to="/blog">Blog</Link>
               </li>
+              <li>
+                <Link className='text-light' to="/services">Services</Link>
+              </li>
+              <li>
+                <Link className='text-light' to="/testimonials">Testimonials</Link>
+              </li>
+              <li>
+                <Link className='text-light' to="/privacy-policy">Privacy policy</Link>
+              </li>
+              <li>
+                <Link className='text-light' to="/faq">FAQ</Link>
+              </li>
+              
             </ul>
           </div>
           <div className="col-md-4">
@@ -48,13 +61,16 @@ const Footer = () => {
             <h5>Follow Us</h5>
             <ul className="list-inline">
               <li className="list-inline-item">
-                <a href="#"><FaFacebook size={size}/></a>
+                <Link className='text-light' to="#"><FaFacebook size={size}/></Link>
               </li>
               <li className="list-inline-item">
-                <a href="#"><a href="#"><FaTwitter size={size}/></a></a>
+                <Link className='text-light' to="#"><a to="#"><FaInstagram size={size}/></a></Link>
               </li>
               <li className="list-inline-item">
-                <a href="#"><a href="#"><FaLinkedin size={size}/></a></a>
+                <Link className='text-light' to="#"><FaLinkedin size={size}/></Link>
+              </li>
+              <li className="list-inline-item">
+                <Link className='text-light' to="#"><FaTwitter size={size}/></Link>
               </li>
             </ul>
           </div>

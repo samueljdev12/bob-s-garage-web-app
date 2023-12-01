@@ -28,25 +28,26 @@ const Account = () => {
 
 
   return (
-    <div className="container my-5 border p-5 ">
+    <div className="container">
       <div className="row">
-        <div className="col-md-6 offset-md-3">
-          <h2 className="text-center mb-4">Your Account Details</h2>
+      <h2 className="text-center m-4">Your Account Details</h2>
+        <div className="col-md-6 offset-md-3 custom-border rounded p-md-5 text-center py-4">
+         
           <div className="user-info">
             <div className="info-item">
-              <span className="info-label">First Name:</span>
+              <span className="info-label">First Name: </span>
               <span className="info-value">{userData.firstName}</span>
             </div>
             <div className="info-item">
-              <span className="info-label">Last Name:</span>
+              <span className="info-label">Last Name: </span>
               <span className="info-value">{userData.lastName}</span>
             </div>
             <div className="info-item">
-              <span className="info-label">Email:</span>
+              <span className="info-label">Email: </span>
               <span className="info-value">{userData.email}</span>
             </div>
             <div className="text-center">
-                <Link to="/user/edit" className="btn btn-outline-primary ">Edit</Link>
+                <Link to="/user/edit" className="btn btn-outline-primary mt-3">Edit</Link>
             </div>
           </div>
            {userFeed !== undefined  &&(<div className="text-center m-3">

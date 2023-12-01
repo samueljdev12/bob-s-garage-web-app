@@ -11,38 +11,40 @@ const SinglePost = () => {
   useEffect(() => {
     dispatch(getPost());
   }, [dispatch]);
-  // Dummy blog post data with images
 
   const post = useSelector((state) => selectPost(state, postId));
-  console.log(post);
-  if(!post){
+
+  if (!post) {
     return (
-      <div className="container-error py-5">
-      <div className="row">
-        <div className="col-md-8 offset-md-2">
-    <div className="alert alert-warning" role="alert">
-    An error occured while getting post
- </div>
- </div>
- </div>
- </div>
- )
+      <div className="container py-5">
+        <div className="row">
+          <div className="col-md-8 offset-md-2">
+            <div className="alert alert-warning" role="alert">
+              An error occurred while getting the post
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="container py-5">
-      <Link className="text-decoration-none lead" to="/blog">&lt;&lt;&lt;Back to all posts</Link>
-      <div className="row">
+      <Link to="/blog" className="text-decoration-none lead">
+        &lt;&lt;Back
+      </Link>
+      <h1 className=" m-3 text-center">{post.title}</h1>
+      <div className="row mt-4 border p-md-2">
         <div className="col-md-8 offset-md-2">
-          <h4 className="display-4 text-center">{post.title}</h4>
           <div className="text-center">
             <img
-              className="w-75 rounded"
+              className="img-fluid rounded m-4"
               src={post.image}
-            ></img>
+              alt={post.title}
+            />
           </div>
           <div className="mt-3">
-            <p className="lead">{post.content}</p>
+            <p className="">{post.content}</p>
           </div>
         </div>
       </div>

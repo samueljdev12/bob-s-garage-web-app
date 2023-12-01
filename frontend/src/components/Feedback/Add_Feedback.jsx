@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiMessageSquare } from 'react-icons/fi';
-import { isAuth, getAuthUser } from "../../../reducers/authSlice";
+import { isAuth } from "../../../reducers/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { addFeedabck } from '../../../reducers/FeedbackSlice';
 import { useNavigate } from 'react-router-dom';
@@ -8,22 +8,25 @@ import PopUp from '../layouts/PopUp';
 import { showPopup } from '../../utils/ShowPoup';
 // unwrap for dispatch
 import { unwrapResult } from '@reduxjs/toolkit';
+import Error from "../layouts/Error";
+import { showContainerError } from "../../utils/showError";
 
 
 
 const AddFeedback = () => {
-
   // variables
   const isAuthenticated = useSelector(isAuth);
-  const user = useSelector(getAuthUser)
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  
+  console.log(localStorage.getItem("userId"))
+  const UserUserId = parseInt(localStorage.getItem("userId"))
   // form data state
   const [formData, setFormData] = useState({
     content: '',
-    UserUserId: user.userId
+    UserUserId
   });
+
 
   // handle form change
   const handleInputChange = (e) => {
@@ -46,13 +49,13 @@ const AddFeedback = () => {
         if(originalPromiseResult){
           showPopup("success", "/customer-account", navigate, {
             title: "Success",
-            body: " Added with success",
+            body: "Feedback added successfully",
             footer: "You will be redirected in 3 seconds.."
           });
         }
     } catch (rejectedValueOrSerializedError){
       const errorMessage = rejectedValueOrSerializedError.message || 'An error occurred';
-      alert(errorMessage);
+      showContainerError(errorMessage)
     }
   };
 
@@ -74,10 +77,14 @@ const AddFeedback = () => {
   
   return (
     <div className="container py-5">
+      {/* Popup component */}
       <PopUp/>
+
       <div className="row justify-content-center">
         <div className="col-md-8">
           <h2 className="mb-4">Add Feedback</h2>
+          {/* Error component */}
+          <Error/>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="content" className="form-label">

@@ -1,32 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FiEdit, FiAlignLeft, FiDollarSign } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
-import { editService, selectService} from "../../../../reducers/ServiceSlice";
-import {useNavigate, useParams } from "react-router-dom";
+import { editService, selectService } from "../../../../reducers/ServiceSlice";
+import { useNavigate, useParams } from "react-router-dom";
 import PopUp from "../../layouts/PopUp";
-import {showPopup} from "../../../utils/ShowPoup";
-// unwrap for dispatch
+import { showPopup } from "../../../utils/ShowPoup";
+import { isAuth } from "../../../../reducers/authSlice";
+import Error from "../../layouts/Error";
+import { showContainerError } from "../../../utils/showError";
 import { unwrapResult } from '@reduxjs/toolkit';
 
-
 const EditService = () => {
-  //variables
   const navigate = useNavigate();
+  const isAuthenticated = useSelector(isAuth);
+  const isAdmin = localStorage.getItem("isAdmin");
   const dispatch = useDispatch();
-  let {id} = useParams();
+  let { id } = useParams();
   id = parseInt(id);
 
-  const service = useSelector((state) => selectService(state, id))
+  const service = useSelector((state) => selectService(state, id));
+  console.log(service);
 
-// form data state
+  // state
   const [formData, setFormData] = useState({
     name: service?.name || "",
     description: service?.description || "",
-    price: service?.price || 0,
-    serviceId: service?.serviceId || 0
+    price: service?.price || "",
+    serviceId: service?.serviceId || 0,
   });
 
-  // form chnage handler
+  // form change handler
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -39,37 +42,45 @@ const EditService = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      
       const resultAction = await dispatch(editService(formData));
-      
-      // Use unwrapResult to extract the fulfilled value
       const originalPromiseResult = unwrapResult(resultAction);
-      if(originalPromiseResult){
-       console.log("After submit")
-      
-        // calling showpopu
+
+      if (originalPromiseResult) {
         showPopup("success", "/admin/services", navigate, {
           title: "Success",
           body: " Added with success",
-          footer: "You will be redirected in 3 seconds.."
+          footer: "You will be redirected in 3 seconds..",
         });
       }
     } catch (rejectedValueOrSerializedError) {
-      const errorMessage = rejectedValueOrSerializedError.message || 'An error occurred';
-      alert(errorMessage);
+      const errorMessage =
+        rejectedValueOrSerializedError.message || "An error occurred";
+      showContainerError(errorMessage);
     }
   };
 
   // show popup
- 
+  // incase of unauthorized user
+  if (!isAuthenticated || isAdmin !== "true") {
+    return (
+      <div className="container-error px-3">
+        <div className="row">
+          <div className="alert alert-warning" role="alert">
+            You are not Authorized to access this page
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
-      <PopUp/>
-      {/* main conten */}
+      <PopUp />
+      {/* main content */}
       <div className="row justify-content-center">
         <div className="col-md-8">
-          <h2 className="mb-4">Add Service</h2>
+          <h2 className="mb-4">Edit Service</h2>
+          <Error />
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="name" className="form-label">

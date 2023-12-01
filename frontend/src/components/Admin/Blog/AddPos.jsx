@@ -8,6 +8,9 @@ import PopUp from '../../layouts/PopUp';
 import { showPopup } from '../../../utils/ShowPoup';
 // unwrap for dispatch
 import { unwrapResult } from '@reduxjs/toolkit';
+import Error from '../../layouts/Error';
+import { showContainerError } from '../../../utils/showError';
+
 
 const AddPost = () => {
 
@@ -66,7 +69,7 @@ const AddPost = () => {
      
     } catch (rejectedValueOrSerializedError) {
       const errorMessage = rejectedValueOrSerializedError.message || 'An error occurred';
-      alert(errorMessage);
+      showContainerError(errorMessage);
     }
   }
 
@@ -76,6 +79,7 @@ const AddPost = () => {
       <div className="row justify-content-center">
         <div className="col-md-8">
           <h2 className="mb-4">Add Post</h2>
+          <Error/>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="title" className="form-label">
@@ -88,6 +92,7 @@ const AddPost = () => {
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
+                required
               />
             </div>
             <div className="mb-3">
@@ -101,6 +106,7 @@ const AddPost = () => {
                 rows="4"
                 value={formData.content}
                 onChange={handleInputChange}
+                required
               ></textarea>
             </div>
             <div className="mb-3">
@@ -114,11 +120,14 @@ const AddPost = () => {
                 name="image"
                 value={formData.image}
                 onChange={handleInputChange}
+                required
               />
             </div>
+            <div className='text-center'>
             <button type="submit" className="btn btn-primary">
               Add Post
             </button>
+            </div>
           </form>
         </div>
       </div>

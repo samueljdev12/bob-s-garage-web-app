@@ -34,7 +34,7 @@ const EditProfile = () => {
           // Show success popup
           showPopup("success", "/customer-account", navigate, {
             title: "Success",
-            body: " Update with success",
+            body: "Your details have be update successfully",
             footer: "You will be redirected in 3 seconds..",
           });
         })

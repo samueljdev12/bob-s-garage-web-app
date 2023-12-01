@@ -1,4 +1,4 @@
-export function showPopup(name, path, navigateCallback, modalContent) {
+export function showPopup(name, path='', navigateCallback, modalContent) {
   var $modal = $(`#${name}`);
   var $modalTitle = $modal.find('.modal-title');
   var $modalBody = $modal.find('.modal-body');
@@ -19,8 +19,10 @@ export function showPopup(name, path, navigateCallback, modalContent) {
 
   $modal.modal('show');
 
+ if(name === "success"){
   setTimeout(() => {
     $modal.modal('hide');
     navigateCallback(path);
   }, 3000);
+ }
 }

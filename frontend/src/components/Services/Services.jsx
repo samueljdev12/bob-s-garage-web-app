@@ -29,15 +29,15 @@ const Services = () => {
   return (
     <div className="container p-4">
       <h2 className="mt-4 text-center">Our Services</h2>
-      <p className='text-center'>Our services and prices are listed below</p>
-      <div className="container text-md-center">
-          <p>
+      <div className="container text-md-center description-div bg-light p-3 my-4  rounded">
+          <p className="text-dark">
             We are located at <span><FiMapPin></FiMapPin></span>123 Main Street, Anytown, USA. Feel free to drop by for an inspection or consultation.
           </p>
-          <p>
+          <p className="text-dark">
             For inquiries, you can reach us at <span><FiPhone></FiPhone></span>(555) 123-4567 or email us at <span><FiMail></FiMail></span> info@bobsgarage.com.
           </p>
         </div>
+        <p className='text-md-center lead'>Our services and prices are listed below</p>
       <div className="row">
         {services.map((service) => (
           <div className="col-md-4" key={service.serviceId}>
