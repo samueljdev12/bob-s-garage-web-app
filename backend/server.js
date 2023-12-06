@@ -78,8 +78,14 @@ app.delete("/server/services/delete/:id", [authenticate, authorize], servicesCon
 app.get("/server/services/service/:id", [authenticate, authorize], servicesController.getService);
 
 // server 
-db.sequelize.sync().then(() => {
+db.sequelize.sync()
+  .then(() => {
     app.listen(config.port,
       () => console.log(`Server is running on port: ${config.port}`))
+    console.log('Sequelize models synchronized with the database');
+  })
+  .catch((error) => {
+    console.error('Sequelize synchronization error:', error);
   });
+
   

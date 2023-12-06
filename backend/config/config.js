@@ -5,19 +5,14 @@ module.exports = {
     port: process.env.PORT,
     db: {
         host: process.env.HOST,
-        port: process.env.PORT,
+        port: '5432',
         user: process.env.DB_USER,
         password: process.env.DB_PASS,
         database: process.env.DD_NAME,
         options: {
             dialect: process.env.DIALECT,
-            ssl: true,
-            dialectOptions: {
-                ssl: {
-                  require: true,
-                },
-            // storage: './data/gragecms.sqlite'
-        }
+           
+       
     }
     },
     auth: {
