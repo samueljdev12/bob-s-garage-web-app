@@ -5,7 +5,7 @@ import setAuthToken from "../src/utils/setToken";
 
 const initialState = {
   feedbacks: [],
-  status: "idle",
+  isloading: false,
 };
 
 // get all feedbacks
@@ -83,10 +83,10 @@ const feedbackSlice = createSlice({
          state.status = "failed"
       })
       .addCase(editFeedback.pending, (state) => {
-        state.status = "loading";
+        state.isloading = true;
       })
       .addCase(editFeedback.fulfilled, (state, action) => {
-        state.status = "success";
+        state.isloading = false;
         const updatedFeedback = action.payload;
 
         // Find the index of the post to be updated
@@ -101,21 +101,21 @@ const feedbackSlice = createSlice({
         }
       })
       .addCase(editFeedback.rejected, (state) => {
-        state.status = "erro";
+        state.isloading = false;
       
       })
 
       // new feedback
       .addCase(addFeedabck.pending, (state) => {
-        state.status = "loading";
+        state.isloading = true;
       })
       .addCase(addFeedabck.fulfilled, (state, action) => {
-        state.status = "success";
+        state.isloading = false;
         state.feedbacks = [...state.feedbacks, action.payload];
       })
 
       .addCase(addFeedabck.rejected, (state) => {
-        state.status = "idle";
+        state.isloading = false;
       })
     // delete feedback
      .addCase(deleteFeed.pending, (state) => {
@@ -142,3 +142,4 @@ export const selectAllFeedbacks = (state) => state.feedbacks.feedbacks;
 export const selectUserFeedback = (state, userId) =>
   state.feedbacks.feedbacks.find((feedback) => feedback.UserUserId === userId);
 export default feedbackSlice.reducer;
+export const selectIsloading = (state) => state.feedbacks.isloading;

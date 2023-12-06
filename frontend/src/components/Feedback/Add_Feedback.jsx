@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FiMessageSquare } from 'react-icons/fi';
 import { isAuth } from "../../../reducers/authSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { addFeedabck } from '../../../reducers/FeedbackSlice';
+import { addFeedabck, selectIsloading } from '../../../reducers/FeedbackSlice';
 import { useNavigate } from 'react-router-dom';
 import PopUp from '../layouts/PopUp';
 import { showPopup } from '../../utils/ShowPoup';
@@ -10,6 +10,7 @@ import { showPopup } from '../../utils/ShowPoup';
 import { unwrapResult } from '@reduxjs/toolkit';
 import Error from "../layouts/Error";
 import { showContainerError } from "../../utils/showError";
+import Loading from '../layouts/Loadin';
 
 
 
@@ -18,6 +19,7 @@ const AddFeedback = () => {
   const isAuthenticated = useSelector(isAuth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isloading = useSelector(selectIsloading)
   
   console.log(localStorage.getItem("userId"))
   const UserUserId = parseInt(localStorage.getItem("userId"))
@@ -102,6 +104,7 @@ const AddFeedback = () => {
             <button type="submit" className="btn btn-primary">
               Add Feedback
             </button>
+            {isloading &&(<Loading message={"Adding feedback"}/>)}
           </form>
         </div>
       </div>

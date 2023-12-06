@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
-import { useDispatch} from 'react-redux';
-import { loginAsync, getUser } from '../../../reducers/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginAsync, getUser, getisLoading } from '../../../reducers/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
 // unwrap for dispatch
 import { unwrapResult } from '@reduxjs/toolkit';
 import Error from "../layouts/Error";
 import { showContainerError } from "../../utils/showError";
+import Loading from '../layouts/Loadin';
+
 
 const Login = () => {
 
@@ -14,8 +16,11 @@ const Login = () => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
+  const isloading = useSelector(getisLoading);
+  console.log(isloading)
 
-// form state
+
+  // form state
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -38,7 +43,7 @@ const Login = () => {
     setErrors(newErrors);
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (Object.keys(errors).length === 0) {
@@ -46,25 +51,25 @@ const Login = () => {
       try {
         // Dispatch the loginAsync action
         const resultAction = await dispatch(loginAsync(formData));
-      
+
         // Use unwrapResult to extract the fulfilled value
         const originalPromiseResult = unwrapResult(resultAction);
-      
+
         // Dispatch getUser action
-        if(originalPromiseResult){
+        if (originalPromiseResult) {
           await dispatch(getUser());
         }
-      
+
         // Navigate to "/"
         navigate("/");
-      
+
         // Reload the window
         window.location.reload(true);
-      
+
       } catch (rejectedValueOrSerializedError) {
         // Handle the error here
         const errorMessage = rejectedValueOrSerializedError.message || 'An error occurred';
-         showContainerError(errorMessage);
+        showContainerError(errorMessage);
       }
     }
   };
@@ -80,13 +85,18 @@ const Login = () => {
 
   return (
     <div className="container py-5">
+      {/* {isloading && (
+        <div class="spinner-grow text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+       )} */}
       <div className="row justify-content-center">
         <div className="col-md-6">
           <h2 className="mt-4">Login</h2>
           <p className="mt-3">
-              Don't have an account? <Link to="/register">Register</Link>
+            Don't have an account? <Link to="/register">Register</Link>
           </p>
-          <Error/>
+          <Error />
           <form onSubmit={handleSubmit} className='border rounded  p-5'>
             <div className="mb-4">
               <label htmlFor="email" className="form-label">
@@ -120,13 +130,16 @@ const Login = () => {
               />
             </div>
             <div className='text-center'>
-            <button type="submit" className="btn btn-primary">
-              Login <FiLogIn />
-            </button>
+              <button type="submit" className="btn btn-primary">
+                {isloading ? "Loggin In" : "Login"} <FiLogIn />
+              </button>
             </div>
             <p className="mt-3">
               Don't have an account? <Link to="/register">Register</Link>
             </p>
+            {isloading && (
+              <Loading message={"loggin in"}/>
+            )}
           </form>
         </div>
       </div>

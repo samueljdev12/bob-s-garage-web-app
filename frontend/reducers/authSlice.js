@@ -8,7 +8,7 @@ const initialState = {
   isAuth: localStorage.getItem("token") ? true : false,
   user: {},
   token: localStorage.getItem("token"),
-  status: "idle",
+  isLoading: false,
   isAdmin: false,
 };
 
@@ -73,14 +73,14 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(loginAsync.pending, (state) => {
-        state.status = "loading";
+        state.isLoading = true;
       })
       .addCase(loginAsync.fulfilled, (state, action) => {
-        state.status = "success";
+        state.isLoading = false;
         state.token = action.payload;
       })
       .addCase(loginAsync.rejected, (state) => {
-        state.status = "failed";
+        state.isLoading = false;
         
       })
       .addCase(getUser.pending, (state) => {
@@ -97,13 +97,13 @@ const authSlice = createSlice({
         
       })
       .addCase(register.pending, (state) => {
-        state.status = "loading";
+        state.isLoading = true;
       })
       .addCase(register.fulfilled, (state) => {
-        state.status = "success";
+        state.isLoading = false;
       })
       .addCase(register.rejected, (state) => {
-        state.status = "failed";
+        state.isLoading = false;
        
       })
       .addCase(edit.pending, (state) => {
@@ -123,7 +123,7 @@ const authSlice = createSlice({
 export const getAuthUser = (state) => state.auth.user;
 export const isAuth = (state) => state.auth.isAuth;
 export const isAdmin = (state) => state.auth.isAdmin;
-export const getStatus = (state) => state.auth.status;
+export const getisLoading = (state) => state.auth.isLoading;
 export const getError = (state) => state.auth.error; 
 
 export const { logout, resetError, resetStatus } = authSlice.actions;

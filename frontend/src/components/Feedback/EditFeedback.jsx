@@ -6,6 +6,7 @@ import {
   selectUserFeedback,
   editFeedback,
   getAllFeedbacks,
+  selectIsloading
 } from "../../../reducers/FeedbackSlice";
 import { useNavigate } from "react-router-dom";
 import PopUp from "../layouts/PopUp";
@@ -15,6 +16,7 @@ import { unwrapResult } from "@reduxjs/toolkit";
 
 import Error from "../layouts/Error";
 import { showContainerError } from "../../utils/showError";
+import Loading from "../layouts/Loadin";
 
 const EditFeedback = () => {
   // vairables
@@ -25,6 +27,7 @@ const EditFeedback = () => {
   );
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isloading = useSelector(selectIsloading)
 
   // state
   const [formData, setFormData] = useState({
@@ -113,6 +116,7 @@ const EditFeedback = () => {
             <button type="submit" className="btn btn-primary">
               Update Feedback
             </button>
+            {isloading &&(<Loading message={"Updaing feeedback"}/>)}
           </form>
         </div>
       </div>

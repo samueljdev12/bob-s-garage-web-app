@@ -1,15 +1,21 @@
 import { FiUser, FiMail, FiLock, FiUserPlus } from 'react-icons/fi';
-import { useDispatch } from "react-redux";
-import { register} from '../../../reducers/authSlice';
+import { useDispatch, useSelector } from "react-redux";
+import { register, getisLoading} from '../../../reducers/authSlice';
 import { useState } from 'react';
 import { unwrapResult } from '@reduxjs/toolkit';
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import Error from "../layouts/Error";
 import { showContainerError } from "../../utils/showError";
+import Loading from '../layouts/Loadin';
+import PopUp from '../layouts/PopUp';
+import { showPopup } from '../../utils/ShowPoup';
+
 
 
 const Register = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isloafing = useSelector(getisLoading)
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -96,7 +102,11 @@ const Register = () => {
         const originalPromiseResult = unwrapResult(resultAction);
           if(originalPromiseResult){
             // Alert for successful registration
-               alert('SignUp successful');
+            showPopup("success", "/login", navigate, {
+              title: "Success",
+              body: "Registeration successfull",
+              footer: "You will be redirected in 3 seconds..",
+            });
           }
         
       } catch (rejectedValueOrSerializedError) {
@@ -211,6 +221,8 @@ const Register = () => {
             <p className="mt-3">
               Already have an account <Link to="/login">Login</Link>
             </p>
+            <PopUp/>
+            {isloafing && (<Loading message={"in progress"}/>)}
           </form>
         </div>
       </div>
