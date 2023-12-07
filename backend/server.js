@@ -2,7 +2,7 @@
 // it contains app routes
 const express = require('express');
 // Allow only requests from http://localhost:5173/
-const allowedOrigin = 'http://localhost:5173';
+const allowedOrigin = process.env.allowedOrigin;
 
 const cors = require('cors');
 // initialize app
