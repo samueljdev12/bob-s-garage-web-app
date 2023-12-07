@@ -11,19 +11,9 @@ let db = {};
 
 // creating a sequelize object and pass in db details
 const sequelize = new Sequelize(
-    "postgres://adminbob:6R53uxOcJCVAmwshwlEZC0ve6igezwfL@dpg-clliaanq7omc73cmeae0-a.oregon-postgres.render.com/garage_sna5",
-    {
-        dialect: 'postgres',
-        dialectOptions: {
-          ssl: {
-            rejectUnauthorized: false, // You might need to set this to true in a production environment with a valid CA certificate
-          },
-        },
-      }
-    // config.db.database,
-    // config.db.user,
-    // config.db.password,
-    // config.db.options
+    config.db.host
+    ,
+     config.db.options
 )
 
 // set up models
