@@ -47,9 +47,6 @@ const Nav = () => {
               <Link className="nav-link text-white" to="/testimonials">Testimonials</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-white" to="/blog">Blog</Link>
-            </li>
-            <li className="nav-item">
               <Link className="nav-link text-white" to="/faq">FAQ</Link>
             </li>
             <li className="nav-item">

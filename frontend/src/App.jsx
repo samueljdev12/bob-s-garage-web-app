@@ -9,18 +9,13 @@ import Login from './components/User/Login';
 import Footer from './components/layouts/Footer';
 import Faq from './components/pages/Faq';
 import Privacy from './components/pages/Privacy';
-import Blog from './components/Blog/Blog';
 import Feedback from './components/Feedback/Feedback';
 import Account from './components/User/Account';
-import SinglePost from './components/Blog/SinglePost';
-import AddPost from './components/Admin/Blog/AddPos';
 import AddService from './components/Admin/Services/AddService';
 import AddFeedback from './components/Feedback/Add_Feedback';
 import FeedbackList from './components/Admin/Feedback/FeedbackList';
-import PostList from './components/Admin/Blog/PostList';
 import ServiceList from './components/Admin/Services/ServiceList';
 import Header from './components/Admin/layouts/Header';
-import EditPost from './components/Admin/Blog/EditPost';
 import EditFeedback from './components/Feedback/EditFeedback';
 import EditService from './components/Admin/Services/EditSerrvices';
 import EditProfile from './components/User/EditProfile';
@@ -54,20 +49,15 @@ const theme = useSelector(selectTheme);
          <Route path='/user/edit' element={<EditProfile/>}></Route>
          <Route path='/faq' element={<Faq/>}></Route>
          <Route path='/privacy-policy' element={<Privacy/>}></Route>
-         <Route path='/blog' element={<Blog/>}></Route>
          <Route path='/testimonials' element={<Feedback/>}></Route>
          <Route path='/customer-account' element={<Account/>}></Route>
-         <Route path='/blog/post/:postId' element={<SinglePost/>}></Route>
          <Route path='/testimonials/new' element={<AddFeedback/>}></Route>
          <Route path='/testimonials/edit/:id' element={<EditFeedback/>}></Route>
          
          {/* admin routes */}
-         <Route path='/admin/add_post' element={<AddPost/>}></Route>
          <Route path='/admin/add_service' element={<AddService/>}></Route>
          <Route path='/admin/feedbacks' element={<FeedbackList/>}></Route>
-          <Route path='/admin/posts' element={<PostList/>}></Route>
           <Route path='/admin/services' element={<ServiceList/>}></Route>
-          <Route path='/admin/post/edit/:id' element={<EditPost/>}></Route>
           <Route path='/admin/services/service/edit/:id' element={<EditService/>}></Route>
 
           {/* Not found */}

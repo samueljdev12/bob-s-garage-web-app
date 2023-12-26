@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-const baseUrl = "http://localhost:3001/server/feedbacks";
+const baseUrl = "https://backend-z3wy.onrender.com/server/feedbacks";
 import setAuthToken from "../src/utils/setToken";
 
 const initialState = {

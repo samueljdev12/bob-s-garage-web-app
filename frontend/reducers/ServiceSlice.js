@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-const baseUrl = "http://localhost:3001/server/services";
+const baseUrl = "https://backend-z3wy.onrender.com/server/services";
 import setAuthToken from "../src/utils/setToken";
 
 // state

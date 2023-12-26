@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import setAuthToken from "../src/utils/setToken";
 
-const baseUrl = "http://localhost:3001/server";
+const baseUrl = "https://backend-z3wy.onrender.com/server";
 
 const initialState = {
   isAuth: localStorage.getItem("token") ? true : false,
