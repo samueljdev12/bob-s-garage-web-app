@@ -4,6 +4,7 @@ import {
   getAllFeedbacks,
   selectAllFeedbacks,
 } from "../../../reducers/FeedbackSlice";
+import Loading from "../layouts/Loadin";
 
 const Feedback = () => {
   const dispatch = useDispatch();
@@ -14,11 +15,11 @@ const Feedback = () => {
 
   const feedbacks = useSelector(selectAllFeedbacks);
 
-  const date = new Date();
-
-
   return (
     <div className="container p-md-5">
+      {feedbacks.length <= 0 &&(
+        <Loading message={"Getting feedbacks"}/>
+      )}
       <h2 className="mt-4">Testimonials</h2>
       <div className="description-div bg-light p-3 mb-4 rounded ">
         <p className="text-dark">
@@ -35,7 +36,8 @@ const Feedback = () => {
                 </h5>
                 <p className="card-text">{feedback.content}</p>
               </div>
-              <p className="mx-3">{date.toDateString(feedback.createdAt)}</p>
+              
+              <p className="mx-3">{new Date(feedback.createdAt).toISOString().split("T")[0]}</p>
             </div>
           </div>
         ))}

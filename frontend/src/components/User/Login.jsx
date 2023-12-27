@@ -17,7 +17,7 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const dispatch = useDispatch();
   const isloading = useSelector(getisLoading);
-  console.log(isloading)
+
 
 
   // form state

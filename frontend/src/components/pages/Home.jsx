@@ -71,7 +71,7 @@ const Home = () => {
         <div className="container">
           <h2 className="text-center">Contact Us</h2>
           <p>
-            We are located at <span><FiMapPin></FiMapPin></span>123 Main Street, Anytown, Australia. Feel free to drop by for an inspection or consultation.
+            We are located at <span><FiMapPin></FiMapPin></span>123 Main Street, Melbourne, Australia. Feel free to drop by for an inspection or consultation.
           </p>
           <p>
             For inquiries, you can reach us at <span><FiPhone></FiPhone></span>(555) 123-4567 or email us at <span><FiMail></FiMail></span> info@bobsgarage.com.

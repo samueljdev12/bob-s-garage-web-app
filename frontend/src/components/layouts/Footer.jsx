@@ -30,9 +30,6 @@ const Footer = () => {
                 <Link className='text-light' to="/register">Register</Link>
               </li>
               <li>
-                <Link className='text-light' to="/blog">Blog</Link>
-              </li>
-              <li>
                 <Link className='text-light' to="/services">Services</Link>
               </li>
               <li>
@@ -52,7 +49,7 @@ const Footer = () => {
             <address>
               <p>Bob's Garage</p>
               <p>123 Main Street</p>
-              <p>City, State ZIP</p>
+              <p>Melbourne, Victoria 3000</p>
               <p>Email: info@bobsgarage.com</p>
               <p>Phone: (123) 456-7890</p>
             </address>
@@ -61,16 +58,16 @@ const Footer = () => {
             <h5>Follow Us</h5>
             <ul className="list-inline">
               <li className="list-inline-item">
-                <Link className='text-light' to="#"><FaFacebook size={size}/></Link>
+                <Link className='text-light' to="https://www.facebook.com/"><FaFacebook size={size}/></Link>
               </li>
               <li className="list-inline-item">
-                <Link className='text-light' to="#"><a to="#"><FaInstagram size={size}/></a></Link>
+                <Link className='text-light' to="https://www.instagram.com/"><a to="#"><FaInstagram size={size}/></a></Link>
               </li>
               <li className="list-inline-item">
-                <Link className='text-light' to="#"><FaLinkedin size={size}/></Link>
+                <Link className='text-light' to="https://www.linkedin.com"><FaLinkedin size={size}/></Link>
               </li>
               <li className="list-inline-item">
-                <Link className='text-light' to="#"><FaTwitter size={size}/></Link>
+                <Link className='text-light' to="https://twitter.com/?lang=en-au"><FaTwitter size={size}/></Link>
               </li>
             </ul>
           </div>

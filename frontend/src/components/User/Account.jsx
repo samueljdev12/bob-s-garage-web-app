@@ -11,8 +11,7 @@ const Account = () => {
   
  const isAuthenticated = useSelector(isAuth);
   const userData = useSelector(getAuthUser);
-  const userFeed = useSelector((state) => selectUserFeedback(state, userData.userId))
-  console.log(userFeed)
+  const userFeed = useSelector((state) => selectUserFeedback(state, userData.userId));
 
   if(!isAuthenticated){
     return(
