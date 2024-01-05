@@ -46,7 +46,7 @@ export const register = createAsyncThunk("auth/register", async (formData) => {
 export const edit = createAsyncThunk("auth/edit", async (formData) => {
   setAuthToken(localStorage.token);
   try {
-    const res = await axios.post(`${baseUrl}/us/edit`, formData);
+    const res = await axios.post(`${baseUrl}/user/edit`, formData);
     return res.data;
   } catch (err) {
     throw err.response.data;

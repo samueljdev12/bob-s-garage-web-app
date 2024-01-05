@@ -24,7 +24,7 @@ const Services = () => {
       <h2 className="mt-4 text-center">Our Services</h2>
       <div className="container text-md-center description-div bg-light p-3 my-4  rounded">
           <p className="text-dark">
-            We are located at <span><FiMapPin></FiMapPin></span>123 Main Street, Melbourne, Australia. Feel free to drop by for an inspection or consultation.
+          We are located at <span><FiMapPin></FiMapPin></span>123 Main Street, Melbourne, Australia. Feel free to drop by for an inspection or consultation.
           </p>
           <p className="text-dark">
             For inquiries, you can reach us at <span><FiPhone></FiPhone></span>(04) 123-4567 or email us at <span><FiMail></FiMail></span> info@bobsgarage.com.

@@ -7,23 +7,23 @@ import {
 import Loading from "../layouts/Loadin";
 
 const Feedback = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getAllFeedbacks());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getAllFeedbacks());
+  // }, [dispatch]);
 
   const feedbacks = useSelector(selectAllFeedbacks);
 
   return (
     <div className="container p-md-5">
-      {feedbacks.length <= 0 &&(
-        <Loading message={"Getting feedbacks"}/>
+      {feedbacks.length <= 0 && (
+        <Loading message={"Getting feedbacks"} />
       )}
       <h2 className="mt-4">Testimonials</h2>
       <div className="description-div bg-light p-3 mb-4 rounded ">
         <p className="text-dark">
-        This is a list of user feedback. Below are testimonials from users who have shared their thoughts and experiences.
+          This is a list of user feedback. Below are testimonials from users who have shared their thoughts and experiences.
         </p>
       </div>
       <div className="row">
@@ -31,12 +31,18 @@ const Feedback = () => {
           <div className="col-md-12 lead " key={feedback.feedId}>
             <div className="card mb-4 py-2 px-5">
               <div className="card-body">
-                <h5 className="card-title">
-                  {feedback.User.firstName} {feedback.User.lastName}
-                </h5>
+
+                {feedback.User && feedback.User.firstName && feedback.User.lastName && (
+                  <h5 className="card-title">{feedback.User.firstName} {feedback.User.lastName}</h5>
+                )}
+
+                {!feedback.User && (
+                  <h5 className="card-title">Your feedback</h5>
+                )}
+
                 <p className="card-text">{feedback.content}</p>
               </div>
-              
+
               <p className="mx-3">{new Date(feedback.createdAt).toISOString().split("T")[0]}</p>
             </div>
           </div>

@@ -53,11 +53,11 @@ const Nav = () => {
               <Link className="nav-link text-white" to="/privacy-policy">Privacy Policy</Link>
             </li>
             {isAuthentciated && (<li className="nav-item">
-              <Link className="btn btn-outline-info mx-2 text-white" to="/customer-account">My Account</Link>
+              <Link className="btn btn-outline-info mx-md-2 text-white space" to="/customer-account">My Account</Link>
             </li>)}
             <li className="nav-item text-white">
               {isAuthentciated?  <button
-                  className="btn btn-outline-danger btn-sm p-2 text-light "
+                  className="btn btn-outline-danger btn-sm p-2 text-light space"
                   data-bs-toggle="modal"
                   data-bs-target="#exampleModal"
                 >
@@ -69,7 +69,7 @@ const Nav = () => {
             </li>)}
 
             <li>
-            <button className="btn btn-outline-light  mx-2" onClick={toggleDarkMode}>
+            <button className="btn btn-outline-light  mx-md-2" onClick={toggleDarkMode}>
                    {theme === "light" ? "Dark" : "Light"} Mode
             </button>
             </li>

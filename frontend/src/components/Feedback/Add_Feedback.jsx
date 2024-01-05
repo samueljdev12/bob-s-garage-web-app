@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FiMessageSquare } from 'react-icons/fi';
 import { isAuth } from "../../../reducers/authSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { addFeedabck, selectIsloading } from '../../../reducers/FeedbackSlice';
+import { addFeedabck, getAllFeedbacks, selectIsloading } from '../../../reducers/FeedbackSlice';
 import { useNavigate } from 'react-router-dom';
 import PopUp from '../layouts/PopUp';
 import { showPopup } from '../../utils/ShowPoup';
